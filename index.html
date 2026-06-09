@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CoeurLink — Profils Célibataires</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f7f4f2;
+      --bg2: #ffffff;
+      --bg3: #f0ece9;
+      --text: #1a1a1a;
+      --text2: #6b6b6b;
+      --border: #e0d9d4;
+      --pink: #D4537E;
+      --pink-light: #FBEAF0;
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* HEADER */
+    .header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; height: 58px; position: sticky; top: 0; z-index: 100; }
+    .logo { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--text); }
+    .logo span { color: var(--pink); }
+    .tabs { display: flex; gap: 6px; }
+    .tab { padding: 7px 16px; border-radius: 20px; border: 1px solid var(--border); font-size: 13px; cursor: pointer; background: transparent; color: var(--text2); font-family: 'DM Sans', sans-serif; transition: all .2s; }
+    .tab.active { background: var(--pink); color: white; border-color: var(--pink); }
+    .tab:hover:not(.active) { background: var(--bg3); }
+
+    /* LAYOUT */
+    .main { max-width: 640px; margin: 0 auto; padding: 2rem 1.5rem; }
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* FORM CARD */
+    .form-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.75rem; }
+    .form-title { font-family: 'Playfair Display', serif; font-size: 20px; margin-bottom: 1.5rem; }
+    .fsl { font-size: 10.5px; font-weight: 600; letter-spacing: .07em; color: var(--text2); text-transform: uppercase; margin: 1.25rem 0 .65rem; border-top: 1px solid var(--border); padding-top: 1.1rem; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .fg { display: flex; flex-direction: column; gap: 5px; }
+    .fg.full { grid-column: 1 / -1; }
+    label { font-size: 12px; color: var(--text2); font-weight: 500; }
+    input, select, textarea {
+      font-family: 'DM Sans', sans-serif; font-size: 14px; padding: 9px 12px;
+      border-radius: var(--radius-sm); border: 1px solid var(--border);
+      background: var(--bg3); color: var(--text); width: 100%;
+      transition: border-color .2s;
+    }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--pink); }
+    textarea { resize: none; height: 68px; }
+    .iu { position: relative; }
+    .iu input { padding-right: 40px; }
+    .ul { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 12px; color: var(--text2); pointer-events: none; font-weight: 500; }
+
+    /* ACCORDION */
+    .acc { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .acc-hdr { display: flex; align-items: center; gap: 10px; padding: 12px 14px; cursor: pointer; background: var(--bg3); user-select: none; transition: background .15s; }
+    .acc-hdr:hover { background: #e8e2de; }
+    .acc-title { font-size: 13px; font-weight: 500; flex: 1; }
+    .acc-badge { font-size: 11px; padding: 2px 9px; border-radius: 10px; background: var(--pink-light); color: var(--pink); font-weight: 600; border: 1px solid var(--pink); display: none; }
+    .acc-badge.on { display: inline-block; }
+    .acc-chev { font-size: 14px; color: var(--text2); transition: transform .22s; flex-shrink: 0; }
+    .acc-hdr.open .acc-chev { transform: rotate(180deg); }
+    .acc-body { display: none; border-top: 1px solid var(--border); }
+    .acc-body.open { display: block; }
+
+    /* NET ROWS */
+    .nr { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--border); background: var(--bg2); }
+    .nr:last-child { border-bottom: none; }
+    .nr.hi { background: var(--pink-light); }
+    .ni { font-size: 18px; flex-shrink: 0; width: 26px; text-align: center; }
+    .nn { font-size: 13px; font-weight: 500; min-width: 95px; }
+    .rg { display: flex; gap: 5px; flex-shrink: 0; }
+    .rb { padding: 4px 14px; border-radius: 12px; border: 1px solid var(--border); font-size: 12px; cursor: pointer; background: var(--bg3); color: var(--text2); font-family: 'DM Sans', sans-serif; transition: all .15s; }
+    .rb.yes.on { background: var(--pink); color: white; border-color: var(--pink); }
+    .pw { display: flex; align-items: center; gap: 6px; flex: 1; opacity: 0; pointer-events: none; }
+    .pw.show { opacity: 1; pointer-events: all; }
+    .pat { font-size: 13px; color: var(--pink); font-weight: 600; }
+    .pi { font-family: 'DM Sans', sans-serif; font-size: 13px; padding: 5px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg2); color: var(--text); flex: 1; min-width: 0; }
+    .pi:focus { outline: none; border-color: var(--pink); }
+
+    /* CHIPS */
+    .chips-wrap { padding: 14px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip { padding: 7px 14px; border-radius: 14px; border: 1px solid var(--border); font-size: 13px; cursor: pointer; background: var(--bg2); color: var(--text2); transition: all .15s; user-select: none; }
+    .chip.sel { background: var(--pink-light); border-color: var(--pink); color: var(--pink); }
+    .chip:hover:not(.sel) { background: var(--bg3); }
+
+    /* SUBMIT */
+    .btn-submit { margin-top: 1.25rem; width: 100%; padding: 12px; background: var(--pink); color: white; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: opacity .2s; letter-spacing: .02em; }
+    .btn-submit:hover { opacity: .88; }
+
+    /* STATUS BADGES */
+    .sb2 { display: inline-flex; align-items: center; font-size: 11px; padding: 3px 9px; border-radius: 10px; font-weight: 500; }
+    .sc { background: #E1F5EE; color: #0F6E56; }
+    .sd { background: #FAEEDA; color: #BA7517; }
+    .ss { background: var(--pink-light); color: var(--pink); }
+    .sv { background: #F1EFE8; color: #5F5E5A; }
+
+    /* PROFILES */
+    .ph { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+    .pt { font-family: 'Playfair Display', serif; font-size: 20px; }
+    .cb { background: var(--pink-light); color: var(--pink); font-size: 12px; padding: 4px 12px; border-radius: 12px; font-weight: 500; }
+    .pg { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+    .pc { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.2rem; }
+    .av { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+    .pn { font-weight: 600; font-size: 15px; }
+    .pm { font-size: 12px; color: var(--text2); margin-top: 3px; }
+    .ptags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+    .mc { padding: 3px 8px; border-radius: 10px; font-size: 11px; background: var(--bg3); color: var(--text2); }
+    .pint { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+    .psoc { margin-top: 10px; border-top: 1px solid var(--border); padding-top: 9px; display: flex; flex-direction: column; gap: 5px; }
+    .st { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+    .stn { color: var(--text2); min-width: 76px; }
+    .stp { color: #185FA5; font-weight: 500; }
+    .stz { color: var(--text2); font-style: italic; }
+    .es { text-align: center; padding: 3.5rem 1rem; color: var(--text2); }
+    .es i { font-size: 42px; display: block; margin-bottom: 10px; color: var(--pink); opacity: .4; }
+
+    /* MATCH */
+    .mi { font-size: 14px; color: var(--text2); line-height: 1.65; margin-bottom: 1.25rem; }
+    .mc2 { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 1.25rem; }
+    .mc2 select { width: auto; flex: 1; min-width: 150px; }
+    .bm { padding: 10px 22px; background: var(--pink); color: white; border: none; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; white-space: nowrap; }
+    .bm:hover { opacity: .88; }
+    .mrc { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.3rem; display: flex; align-items: center; gap: 13px; margin-bottom: 12px; }
+    .mscore { font-size: 21px; font-weight: 700; min-width: 46px; text-align: center; }
+    .mscore.h { color: var(--pink); }
+    .mscore.m { color: #BA7517; }
+    .mscore.l { color: var(--text2); }
+    .mif { flex: 1; min-width: 0; }
+    .mn { font-weight: 600; font-size: 14px; }
+    .md { font-size: 12px; color: var(--text2); margin-top: 3px; }
+    .mbw { width: 76px; height: 6px; background: var(--bg3); border-radius: 3px; overflow: hidden; flex-shrink: 0; }
+    .mb { height: 100%; border-radius: 3px; background: var(--pink); }
+    .msp { margin-top: 7px; display: flex; flex-wrap: wrap; gap: 5px; }
+    .mpp { font-size: 11px; padding: 3px 9px; border-radius: 10px; background: var(--bg3); color: var(--text2); }
+
+    /* TOAST */
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--pink); color: white; padding: 11px 22px; border-radius: 22px; font-size: 13px; font-family: 'DM Sans', sans-serif; opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 999; white-space: nowrap; box-shadow: 0 4px 16px rgba(212,83,126,.35); }
+    .toast.show { opacity: 1; }
+
+    @media (max-width: 520px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .fg.full { grid-column: 1; }
+      .header { padding: 0 1rem; }
+      .main { padding: 1.25rem 1rem; }
+      .tabs .tab { padding: 6px 10px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">coeur<span>link</span></div>
+  <div class="tabs">
+    <button class="tab active" onclick="go('register')"><i class="ti ti-user-plus"></i> Créer</button>
+    <button class="tab" onclick="go('profiles')"><i class="ti ti-users"></i> Profils</button>
+    <button class="tab" onclick="go('match')"><i class="ti ti-heart"></i> Matches</button>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- ======== CRÉER ======== -->
+  <div class="section active" id="sec-register">
+    <div class="form-card">
+      <div class="form-title">Nouveau profil célibataire 💌</div>
+
+      <div class="fsl">Informations personnelles</div>
+      <div class="form-grid">
+        <div class="fg"><label>Prénom *</label><input id="f-name" placeholder="Sophie"/></div>
+        <div class="fg"><label>Âge *</label><input id="f-age" type="number" placeholder="28" min="18" max="80"/></div>
+        <div class="fg"><label>Genre *</label>
+          <select id="f-gender"><option value="">Choisir...</option><option>Femme</option><option>Homme</option><option>Autre</option></select>
+        </div>
+        <div class="fg"><label>Recherche *</label>
+          <select id="f-looking"><option value="">Choisir...</option><option>Femme</option><option>Homme</option><option>Tous</option></select>
+        </div>
+        <div class="fg"><label>Nationalité</label>
+          <select id="f-nat">
+            <option value="">Choisir...</option>
+            <option>🇫🇷 Française</option><option>🇧🇪 Belge</option><option>🇨🇭 Suisse</option><option>🇨🇦 Canadienne</option>
+            <option>🇩🇿 Algérienne</option><option>🇲🇦 Marocaine</option><option>🇹🇳 Tunisienne</option><option>🇸🇳 Sénégalaise</option>
+            <option>🇨🇮 Ivoirienne</option><option>🇨🇲 Camerounaise</option><option>🇧🇯 Béninoise</option><option>🇲🇱 Malienne</option>
+            <option>🇬🇧 Britannique</option><option>🇩🇪 Allemande</option><option>🇪🇸 Espagnole</option><option>🇮🇹 Italienne</option>
+            <option>🇵🇹 Portugaise</option><option>🇺🇸 Américaine</option><option>🇧🇷 Brésilienne</option><option>🇯🇵 Japonaise</option>
+            <option>🇨🇳 Chinoise</option><option>🇰🇷 Coréenne</option><option>🇮🇳 Indienne</option><option>🇹🇷 Turque</option>
+            <option>🇷🇺 Russe</option><option>🌍 Autre</option>
+          </select>
+        </div>
+        <div class="fg"><label>Statut marital</label>
+          <select id="f-status">
+            <option value="">Choisir...</option>
+            <option value="celibataire">Célibataire</option>
+            <option value="divorce">Divorcé(e)</option>
+            <option value="separe">Séparé(e)</option>
+            <option value="veuf">Veuf / Veuve</option>
+          </select>
+        </div>
+        <div class="fg"><label>Ville de résidence</label><input id="f-city" placeholder="Paris"/></div>
+        <div class="fg"><label>Profession</label><input id="f-job" placeholder="Designer"/></div>
+        <div class="fg"><label>Taille</label>
+          <div class="iu"><input id="f-h" type="number" placeholder="170" min="100" max="250"/><span class="ul">cm</span></div>
+        </div>
+        <div class="fg"><label>Poids</label>
+          <div class="iu"><input id="f-w" type="number" placeholder="65" min="30" max="300"/><span class="ul">kg</span></div>
+        </div>
+        <div class="fg full"><label>Bio</label><textarea id="f-bio" placeholder="Quelques mots sur moi..."></textarea></div>
+      </div>
+
+      <div class="fsl">Réseaux sociaux</div>
+      <div class="acc">
+        <div class="acc-hdr" id="sh" onclick="togAcc('s')">
+          <i class="ti ti-device-mobile" style="font-size:16px;color:#6b6b6b"></i>
+          <span class="acc-title">Voir / renseigner mes réseaux sociaux</span>
+          <span class="acc-badge" id="s-badge"></span>
+          <i class="ti ti-chevron-down acc-chev"></i>
+        </div>
+        <div class="acc-body" id="s-body"></div>
+      </div>
+
+      <div class="fsl">Centres d'intérêt</div>
+      <div class="acc">
+        <div class="acc-hdr" id="ih" onclick="togAcc('i')">
+          <i class="ti ti-heart" style="font-size:16px;color:#6b6b6b"></i>
+          <span class="acc-title">Choisir mes centres d'intérêt</span>
+          <span class="acc-badge" id="i-badge"></span>
+          <i class="ti ti-chevron-down acc-chev"></i>
+        </div>
+        <div class="acc-body" id="i-body">
+          <div class="chips-wrap">
+            <div class="chips" id="chips">
+              <span class="chip" onclick="tc(this)">Voyages ✈️</span>
+              <span class="chip" onclick="tc(this)">Cuisine 🍳</span>
+              <span class="chip" onclick="tc(this)">Musique 🎵</span>
+              <span class="chip" onclick="tc(this)">Sport 🏃</span>
+              <span class="chip" onclick="tc(this)">Cinéma 🎬</span>
+              <span class="chip" onclick="tc(this)">Lecture 📚</span>
+              <span class="chip" onclick="tc(this)">Art 🎨</span>
+              <span class="chip" onclick="tc(this)">Nature 🌿</span>
+              <span class="chip" onclick="tc(this)">Gaming 🎮</span>
+              <span class="chip" onclick="tc(this)">Yoga 🧘</span>
+              <span class="chip" onclick="tc(this)">Photo 📷</span>
+              <span class="chip" onclick="tc(this)">Tech 💻</span>
+              <span class="chip" onclick="tc(this)">Danse 💃</span>
+              <span class="chip" onclick="tc(this)">Randonnée 🥾</span>
+              <span class="chip" onclick="tc(this)">Mode 👗</span>
+              <span class="chip" onclick="tc(this)">Animaux 🐾</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-submit" onclick="save()">Enregistrer le profil 💌</button>
+    </div>
+  </div>
+
+  <!-- ======== PROFILS ======== -->
+  <div class="section" id="sec-profiles">
+    <div class="ph">
+      <div class="pt">Profils enregistrés</div>
+      <span class="cb" id="cnt">0 profil</span>
+    </div>
+    <div class="pg" id="pg">
+      <div class="es"><i class="ti ti-user-off"></i><p>Aucun profil pour l'instant.<br>Commencez par en créer un !</p></div>
+    </div>
+  </div>
+
+  <!-- ======== MATCH ======== -->
+  <div class="section" id="sec-match">
+    <p class="mi">Sélectionnez un profil pour découvrir ses meilleures compatibilités selon les intérêts, l'âge, la ville et les réseaux sociaux partagés.</p>
+    <div class="mc2">
+      <select id="msel"><option value="">— Choisir un profil —</option></select>
+      <button class="bm" onclick="runMatch()">Trouver des matches 💘</button>
+    </div>
+    <div id="mr"></div>
+  </div>
+
+</div><!-- /main -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+const NW=[
+  {id:'tiktok',name:'TikTok',icon:'🎵'},
+  {id:'instagram',name:'Instagram',icon:'📸'},
+  {id:'facebook',name:'Facebook',icon:'📘'},
+  {id:'snapchat',name:'Snapchat',icon:'👻'},
+  {id:'twitter',name:'X / Twitter',icon:'🐦'},
+  {id:'linkedin',name:'LinkedIn',icon:'💼'},
+  {id:'youtube',name:'YouTube',icon:'▶️'},
+  {id:'twitch',name:'Twitch',icon:'🎮'},
+  {id:'pinterest',name:'Pinterest',icon:'📌'},
+  {id:'discord',name:'Discord',icon:'💬'},
+  {id:'whatsapp',name:'WhatsApp',icon:'💚'},
+  {id:'telegram',name:'Telegram',icon:'✈️'},
+  {id:'bereal',name:'BeReal',icon:'📷'},
+  {id:'threads',name:'Threads',icon:'🧵'}
+];
+const SL={celibataire:'Célibataire',divorce:'Divorcé(e)',separe:'Séparé(e)',veuf:'Veuf/Veuve'};
+const SC={celibataire:'sc',divorce:'sd',separe:'ss',veuf:'sv'};
+let P=JSON.parse(localStorage.getItem('coeurlink_profiles')||'[]');
+const AC=['#FBEAF0/#D4537E','#E1F5EE/#1D9E75','#E6F1FB/#185FA5','#FAEEDA/#BA7517','#EEEDFE/#534AB7','#FAECE7/#993C1D'];
+const gc=i=>{const p=AC[i%AC.length].split('/');return{bg:p[0],t:p[1]};};
+const ini=n=>n.split(' ').map(x=>x[0]).join('').toUpperCase().slice(0,2);
+const save2db=()=>localStorage.setItem('coeurlink_profiles',JSON.stringify(P));
+
+function buildNets(){
+  document.getElementById('s-body').innerHTML=NW.map(n=>`
+    <div class="nr" id="nr-${n.id}">
+      <span class="ni">${n.icon}</span>
+      <span class="nn">${n.name}</span>
+      <div class="rg">
+        <button class="rb yes" id="y-${n.id}" onclick="sn('${n.id}',true)">Oui</button>
+        <button class="rb no"  id="no-${n.id}" onclick="sn('${n.id}',false)">Non</button>
+      </div>
+      <div class="pw" id="pw-${n.id}">
+        <span class="pat">@</span>
+        <input class="pi" id="inp-${n.id}" placeholder="${n.name}" oninput="rsc()"/>
+      </div>
+    </div>`).join('');
+}
+
+function togAcc(k){
+  const h=document.getElementById(k+'h'),b=document.getElementById(k+'-body');
+  const o=h.classList.toggle('open');
+  b.classList.toggle('open',o);
+}
+
+function sn(id,y){
+  document.getElementById('y-'+id).classList.toggle('on',y);
+  document.getElementById('no-'+id).classList.toggle('on',!y);
+  document.getElementById('nr-'+id).classList.toggle('hi',y);
+  document.getElementById('pw-'+id).classList.toggle('show',y);
+  if(!y)document.getElementById('inp-'+id).value='';
+  if(y)setTimeout(()=>document.getElementById('inp-'+id).focus(),30);
+  rsc();
+}
+function rsc(){
+  const n=NW.filter(x=>document.getElementById('y-'+x.id).classList.contains('on')).length;
+  const e=document.getElementById('s-badge');
+  if(n){e.textContent=n+' réseau'+(n>1?'x':'');e.classList.add('on');}
+  else e.classList.remove('on');
+}
+function gs(){
+  const r={};
+  NW.forEach(n=>{if(document.getElementById('y-'+n.id).classList.contains('on'))r[n.id]=document.getElementById('inp-'+n.id).value.trim().replace(/^@/,'')||null;});
+  return r;
+}
+function rs(){
+  NW.forEach(n=>{
+    document.getElementById('y-'+n.id).classList.remove('on');
+    document.getElementById('no-'+n.id).classList.remove('on');
+    document.getElementById('nr-'+n.id).classList.remove('hi');
+    document.getElementById('pw-'+n.id).classList.remove('show');
+    document.getElementById('inp-'+n.id).value='';
+  });
+  document.getElementById('s-badge').classList.remove('on');
+  document.getElementById('sh').classList.remove('open');
+  document.getElementById('s-body').classList.remove('open');
+}
+
+function tc(el){
+  el.classList.toggle('sel');
+  const n=document.querySelectorAll('#chips .chip.sel').length;
+  const e=document.getElementById('i-badge');
+  if(n){e.textContent=n+' choix';e.classList.add('on');}
+  else e.classList.remove('on');
+}
+function gch(){return[...document.querySelectorAll('#chips .chip.sel')].map(c=>c.textContent.trim());}
+function rch(){
+  document.querySelectorAll('#chips .chip.sel').forEach(c=>c.classList.remove('sel'));
+  document.getElementById('i-badge').classList.remove('on');
+  document.getElementById('ih').classList.remove('open');
+  document.getElementById('i-body').classList.remove('open');
+}
+
+function go(t){
+  document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('active',['register','profiles','match'][i]===t));
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sec-'+t).classList.add('active');
+  if(t==='profiles')rp();
+  if(t==='match')pms();
+}
+
+function save(){
+  const name=document.getElementById('f-name').value.trim();
+  const age=parseInt(document.getElementById('f-age').value);
+  const gender=document.getElementById('f-gender').value;
+  const looking=document.getElementById('f-looking').value;
+  if(!name||!age||!gender||!looking){showToast('Remplissez les champs obligatoires ⚠️');return;}
+  if(age<18||age>80){showToast('Âge invalide ⚠️');return;}
+  const h=document.getElementById('f-h').value,w=document.getElementById('f-w').value;
+  if(h&&(h<100||h>250)){showToast('Taille invalide ⚠️');return;}
+  if(w&&(w<30||w>300)){showToast('Poids invalide ⚠️');return;}
+  P.push({id:Date.now(),name,age,gender,looking,
+    nat:document.getElementById('f-nat').value,
+    status:document.getElementById('f-status').value,
+    city:document.getElementById('f-city').value.trim(),
+    job:document.getElementById('f-job').value.trim(),
+    height:h?parseInt(h):null,weight:w?parseInt(w):null,
+    bio:document.getElementById('f-bio').value.trim(),
+    interests:gch(),socials:gs()});
+  save2db();
+  showToast('Profil de '+name+' enregistré ! 💌');
+  ['f-name','f-age','f-city','f-job','f-h','f-w','f-bio'].forEach(id=>document.getElementById(id).value='');
+  ['f-gender','f-looking','f-nat','f-status'].forEach(id=>document.getElementById(id).value='');
+  rs();rch();
+}
+
+function rp(){
+  const g=document.getElementById('pg');
+  document.getElementById('cnt').textContent=P.length+' profil'+(P.length>1?'s':'');
+  if(!P.length){g.innerHTML='<div class="es"><i class="ti ti-user-off"></i><p>Aucun profil pour l\'instant.<br>Créez-en un !</p></div>';return;}
+  g.innerHTML=P.map((p,i)=>{
+    const c=gc(i);
+    const ch=p.interests.slice(0,3).map(x=>`<span class="mc">${x}</span>`).join('');
+    const ex=p.interests.length>3?`<span class="mc">+${p.interests.length-3}</span>`:'';
+    const sbadge=p.status?`<span class="sb2 ${SC[p.status]}">${SL[p.status]}</span>`:'';
+    const nb=p.nat?`<span class="mc">${p.nat}</span>`:'';
+    const ph=[];if(p.height)ph.push(`📏 ${p.height} cm`);if(p.weight)ph.push(`⚖️ ${p.weight} kg`);
+    const phc=ph.map(x=>`<span class="mc">${x}</span>`).join('');
+    const se=Object.entries(p.socials||{});
+    const sh=se.length?`<div class="psoc">${se.map(([id,ps])=>{const n=NW.find(x=>x.id===id);return`<div class="st"><span style="font-size:14px">${n?n.icon:'🌐'}</span><span class="stn">${n?n.name:id}</span>${ps?`<span class="stp">@${ps}</span>`:`<span class="stz">sans pseudo</span>`}</div>`;}).join('')}</div>`:'';
+    return`<div class="pc"><div class="av" style="background:${c.bg};color:${c.t}">${ini(p.name)}</div><div class="pn">${p.name}, ${p.age} ans</div><div class="pm">${p.gender} · 📍 ${p.city||'—'}</div><div class="pm">${p.job||''}</div><div class="ptags">${sbadge}${nb}${phc}</div><div class="pint">${ch}${ex}</div>${sh}</div>`;
+  }).join('');
+}
+
+function pms(){
+  const s=document.getElementById('msel');
+  s.innerHTML='<option value="">— Choisir un profil —</option>';
+  P.forEach(p=>{const o=document.createElement('option');o.value=p.id;o.textContent=p.name+', '+p.age+' ans';s.appendChild(o);});
+  document.getElementById('mr').innerHTML='';
+}
+
+function score(a,b){
+  if(!((a.looking==='Tous'||a.looking===b.gender)&&(b.looking==='Tous'||b.looking===a.gender)))return 0;
+  let s=0;
+  s+=a.interests.filter(i=>b.interests.includes(i)).length*15;
+  const d=Math.abs(a.age-b.age);s+=d<=3?25:d<=7?15:d<=12?5:0;
+  if(a.city&&b.city&&a.city.toLowerCase()===b.city.toLowerCase())s+=20;
+  s+=Object.keys(a.socials||{}).filter(n=>Object.keys(b.socials||{}).includes(n)).length*8;
+  if(a.nat&&b.nat&&a.nat===b.nat)s+=10;
+  if(a.status&&b.status&&a.status===b.status)s+=5;
+  return Math.min(s,99);
+}
+
+function runMatch(){
+  const id=parseInt(document.getElementById('msel').value);
+  const r=document.getElementById('mr');
+  if(!id){showToast('Choisissez un profil ⚠️');return;}
+  const tgt=P.find(p=>p.id===id);
+  const oth=P.filter(p=>p.id!==id);
+  if(!oth.length){r.innerHTML='<p style="color:#6b6b6b;font-size:14px;padding:1rem 0">Pas encore assez de profils.</p>';return;}
+  const sc=oth.map(p=>({...p,score:score(tgt,p)})).filter(p=>p.score>0).sort((a,b)=>b.score-a.score);
+  if(!sc.length){r.innerHTML='<p style="color:#6b6b6b;font-size:14px;padding:1rem 0">Aucune compatibilité trouvée.</p>';return;}
+  r.innerHTML=sc.map((p,i)=>{
+    const c=gc(i);
+    const cls=p.score>=60?'h':p.score>=35?'m':'l';
+    const cm=tgt.interests.filter(x=>p.interests.includes(x)).join(', ')||'—';
+    const cn=Object.keys(tgt.socials||{}).filter(n=>Object.keys(p.socials||{}).includes(n));
+    const nh=cn.length?`<div class="msp">${cn.map(n=>{const net=NW.find(x=>x.id===n);const ps=p.socials[n];return`<span class="mpp">${net?net.icon:''} ${net?net.name:n}${ps?' · @'+ps:''}</span>`;}).join('')}</div>`:'';
+    const sl=p.status?` · ${SL[p.status]}`:'';
+    const nl=p.nat?` · ${p.nat}`:'';
+    const ph=[];if(p.height)ph.push(`📏${p.height}cm`);if(p.weight)ph.push(`⚖️${p.weight}kg`);
+    return`<div class="mrc"><div class="av" style="background:${c.bg};color:${c.t};width:42px;height:42px;font-size:15px;flex-shrink:0">${ini(p.name)}</div><div class="mif"><div class="mn">${p.name}, ${p.age} ans · 📍 ${p.city||'—'}${sl}${nl}</div><div class="md">${ph.length?ph.join(' · ')+' · ':''}Intérêts : ${cm}</div>${nh}</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0"><span class="mscore ${cls}">${p.score}%</span><div class="mbw"><div class="mb" style="width:${p.score}%"></div></div></div></div>`;
+  }).join('');
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+buildNets();
+</script>
+</body>
+</html>
