@@ -290,15 +290,45 @@
           <div class="iu"><input id="f-w" type="number" placeholder="65" min="30" max="300"/><span class="ul">kg</span></div>
         </div>
         <div class="fg full"><label>Bio</label><textarea id="f-bio" placeholder="Quelques mots sur moi..."></textarea></div>
+        <div class="fg full"><label>Téléphone</label><input id="f-phone" type="tel" placeholder="+33 6 00 00 00 00"/></div>
       </div>
 
       <div class="fsl">Critères de matching</div>
       <div class="form-grid">
         <div class="fg"><label>Âge min recherché</label>
-          <div class="iu"><input id="f-agemin" type="number" placeholder="25" min="18" max="80"/><span class="ul">ans</span></div>
+          <div class="iu"><input id="f-agemin" type="number" placeholder="18" min="18" max="80"/><span class="ul">ans</span></div>
         </div>
         <div class="fg"><label>Âge max recherché</label>
-          <div class="iu"><input id="f-agemax" type="number" placeholder="40" min="18" max="80"/><span class="ul">ans</span></div>
+          <div class="iu"><input id="f-agemax" type="number" placeholder="50" min="18" max="80"/><span class="ul">ans</span></div>
+        </div>
+        <div class="fg"><label>Taille min recherchée</label>
+          <div class="iu"><input id="f-heightmin" type="number" placeholder="150" min="100" max="250"/><span class="ul">cm</span></div>
+        </div>
+        <div class="fg"><label>Taille max recherchée</label>
+          <div class="iu"><input id="f-heightmax" type="number" placeholder="200" min="100" max="250"/><span class="ul">cm</span></div>
+        </div>
+        <div class="fg"><label>Poids min recherché</label>
+          <div class="iu"><input id="f-weightmin" type="number" placeholder="40" min="30" max="300"/><span class="ul">kg</span></div>
+        </div>
+        <div class="fg"><label>Poids max recherché</label>
+          <div class="iu"><input id="f-weightmax" type="number" placeholder="100" min="30" max="300"/><span class="ul">kg</span></div>
+        </div>
+        <div class="fg"><label>Genre recherché</label>
+          <select id="f-gender-pref">
+            <option value="">Peu importe</option>
+            <option>Femme</option>
+            <option>Homme</option>
+            <option>Autre</option>
+          </select>
+        </div>
+        <div class="fg"><label>Statut marital souhaité</label>
+          <select id="f-status-pref">
+            <option value="">Peu importe</option>
+            <option value="celibataire">Célibataire</option>
+            <option value="divorce">Divorcé(e)</option>
+            <option value="separe">Séparé(e)</option>
+            <option value="veuf">Veuf / Veuve</option>
+          </select>
         </div>
         <div class="fg"><label>Religion souhaitée</label>
           <select id="f-rel-pref">
@@ -312,6 +342,16 @@
             <option>Hindouisme</option>
             <option>Athée / Agnostique</option>
             <option>Autre</option>
+          </select>
+        </div>
+        <div class="fg"><label>Profil recherché</label>
+          <select id="f-seeking-pref">
+            <option value="">Peu importe</option>
+            <option>Relation sérieuse</option>
+            <option>Mariage</option>
+            <option>Amitié</option>
+            <option>Relation occasionnelle</option>
+            <option>Pas encore décidé(e)</option>
           </select>
         </div>
         <div class="fg"><label>Nationalité souhaitée</label>
@@ -334,14 +374,11 @@
             <option>🌍 Autre</option>
           </select>
         </div>
-        <div class="fg"><label>Statut marital souhaité</label>
-          <select id="f-status-pref">
-            <option value="">Peu importe</option>
-            <option value="celibataire">Célibataire</option>
-            <option value="divorce">Divorcé(e)</option>
-            <option value="separe">Séparé(e)</option>
-            <option value="veuf">Veuf / Veuve</option>
-          </select>
+        <div class="fg"><label>Ville souhaitée</label>
+          <input id="f-city-pref" placeholder="Paris"/>
+        </div>
+        <div class="fg"><label>Profession souhaitée</label>
+          <input id="f-job-pref" placeholder="Ex: Médecin, Ingénieur..."/>
         </div>
       </div>
 
@@ -539,6 +576,7 @@ let P=[]; // Profils validés chargés depuis Airtable
             "Centres d'intérêt": profile.interests.join(', '),
             'Réseaux sociaux': socials,
             'Critères matching': matchCriteria,
+            'Téléphone': profile.phone || '',
             'Date inscription': new Date().toISOString(),
             'Statut': '⏳ En attente'
           }
@@ -661,20 +699,30 @@ function save(){
     job:document.getElementById('f-job').value.trim(),
     height:h?parseInt(h):null,weight:w?parseInt(w):null,
     bio:document.getElementById('f-bio').value.trim(),
+    phone:document.getElementById('f-phone').value.trim(),
     interests:gch(),socials:gs(),
     matchPref:{
       ageMin:document.getElementById('f-agemin').value?parseInt(document.getElementById('f-agemin').value):null,
       ageMax:document.getElementById('f-agemax').value?parseInt(document.getElementById('f-agemax').value):null,
+      heightMin:document.getElementById('f-heightmin').value?parseInt(document.getElementById('f-heightmin').value):null,
+      heightMax:document.getElementById('f-heightmax').value?parseInt(document.getElementById('f-heightmax').value):null,
+      weightMin:document.getElementById('f-weightmin').value?parseInt(document.getElementById('f-weightmin').value):null,
+      weightMax:document.getElementById('f-weightmax').value?parseInt(document.getElementById('f-weightmax').value):null,
+      gender:document.getElementById('f-gender-pref').value,
+      status:document.getElementById('f-status-pref').value,
       religion:document.getElementById('f-rel-pref').value,
+      seeking:document.getElementById('f-seeking-pref').value,
       nationality:document.getElementById('f-nat-pref').value,
       country:document.getElementById('f-country-pref').value,
-      status:document.getElementById('f-status-pref').value
+      city:document.getElementById('f-city-pref').value.trim(),
+      job:document.getElementById('f-job-pref').value.trim()
     }});
   saveToAirtable({name,age,gender,looking,nat:document.getElementById('f-nat').value,status:document.getElementById('f-status').value,religion:document.getElementById('f-religion').value,seeking:document.getElementById('f-seeking').value,country:document.getElementById('f-country').value,city:document.getElementById('f-city').value.trim(),job:document.getElementById('f-job').value.trim(),height:document.getElementById('f-h').value?parseInt(document.getElementById('f-h').value):null,weight:document.getElementById('f-w').value?parseInt(document.getElementById('f-w').value):null,bio:document.getElementById('f-bio').value.trim(),interests:gch(),socials:gs(),matchPref:{ageMin:document.getElementById('f-agemin').value?parseInt(document.getElementById('f-agemin').value):null,ageMax:document.getElementById('f-agemax').value?parseInt(document.getElementById('f-agemax').value):null,religion:document.getElementById('f-rel-pref').value,nationality:document.getElementById('f-nat-pref').value,country:document.getElementById('f-country-pref').value,status:document.getElementById('f-status-pref').value}});
   showToast('Inscription envoyée ! En attente de validation ⏳');
-  ['f-name','f-age','f-city','f-job','f-h','f-w','f-bio'].forEach(id=>document.getElementById(id).value='');
-  ['f-gender','f-looking','f-nat','f-status','f-religion','f-seeking','f-country','f-rel-pref','f-nat-pref','f-country-pref','f-status-pref'].forEach(id=>document.getElementById(id).value='');
-  ['f-agemin','f-agemax'].forEach(id=>document.getElementById(id).value='');
+  ['f-name','f-age','f-city','f-job','f-h','f-w','f-bio','f-phone'].forEach(id=>document.getElementById(id).value='');
+  ['f-gender','f-looking','f-nat','f-status','f-religion','f-seeking','f-country','f-rel-pref','f-nat-pref','f-country-pref','f-status-pref','f-gender-pref','f-seeking-pref'].forEach(id=>document.getElementById(id).value='');
+  ['f-agemin','f-agemax','f-heightmin','f-heightmax','f-weightmin','f-weightmax'].forEach(id=>document.getElementById(id).value='');
+  ['f-city-pref','f-job-pref'].forEach(id=>document.getElementById(id).value='');
   rs();rch();
 }
 
@@ -710,10 +758,18 @@ function score(a,b){
   const mp=a.matchPref||{};
   if(mp.ageMin&&b.age<mp.ageMin)return 0;
   if(mp.ageMax&&b.age>mp.ageMax)return 0;
+  if(mp.heightMin&&b.height&&b.height<mp.heightMin)return 0;
+  if(mp.heightMax&&b.height&&b.height>mp.heightMax)return 0;
+  if(mp.weightMin&&b.weight&&b.weight<mp.weightMin)return 0;
+  if(mp.weightMax&&b.weight&&b.weight>mp.weightMax)return 0;
+  if(mp.gender&&b.gender&&mp.gender!==b.gender)return 0;
   if(mp.religion&&b.religion&&mp.religion!==b.religion)return 0;
   if(mp.nationality&&b.nat&&mp.nationality!==b.nat)return 0;
   if(mp.country&&b.country&&mp.country!==b.country)return 0;
   if(mp.status&&b.status&&mp.status!==b.status)return 0;
+  if(mp.seeking&&b.seeking&&mp.seeking!==b.seeking)return 0;
+  if(mp.city&&b.city&&mp.city.toLowerCase()!==b.city.toLowerCase())return 0;
+  if(mp.job&&b.job&&!b.job.toLowerCase().includes(mp.job.toLowerCase()))return 0;
   // Score
   let s=0;
   s+=a.interests.filter(i=>b.interests.includes(i)).length*15;
