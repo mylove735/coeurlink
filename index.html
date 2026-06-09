@@ -443,11 +443,118 @@ const NW=[
 ];
 const SL={celibataire:'Célibataire',divorce:'Divorcé(e)',separe:'Séparé(e)',veuf:'Veuf/Veuve'};
 const SC={celibataire:'sc',divorce:'sd',separe:'ss',veuf:'sv'};
-let P=JSON.parse(localStorage.getItem('coeurlink_profiles')||'[]');
+let P=[]; // Profils validés chargés depuis Airtable
+
+  async function loadValidatedProfiles() {
+    try {
+      const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}?filterByFormula={Statut}='✅ Validé'&fields[]=Prénom&fields[]=Âge&fields[]=Genre&fields[]=Recherche&fields[]=Nationalité&fields[]=Statut marital&fields[]=Religion&fields[]=Profil recherché&fields[]=Pays de résidence&fields[]=Ville de résidence&fields[]=Profession&fields[]=Taille (cm)&fields[]=Poids (kg)&fields[]=Bio&fields[]=Centres d'intérêt&fields[]=Réseaux sociaux&fields[]=Critères matching`;
+      const res = await fetch(url, {
+        headers: { 'Authorization': `Bearer ${AIRTABLE_API_KEY}` }
+      });
+      const data = await res.json();
+      P = (data.records||[]).map(r => {
+        const f = r.fields;
+        const socials = {};
+        (f['Réseaux sociaux']||'').split(', ').forEach(s => {
+          const parts = s.split(' : @');
+          if(parts[0]) socials[parts[0]] = parts[1]||null;
+        });
+        const mp = {};
+        (f['Critères matching']||'').split(' | ').forEach(c => {
+          const [k,v] = c.split(': ');
+          if(k==='Age min') mp.ageMin=parseInt(v);
+          if(k==='Age max') mp.ageMax=parseInt(v);
+          if(k==='Religion') mp.religion=v;
+          if(k==='Nationalité') mp.nationality=v;
+          if(k==='Pays') mp.country=v;
+          if(k==='Statut') mp.status=v;
+        });
+        return {
+          id: r.id,
+          name: f['Prénom']||'',
+          age: f['Âge']||0,
+          gender: f['Genre']||'',
+          looking: f['Recherche']||'',
+          nat: f['Nationalité']||'',
+          status: f['Statut marital']||'',
+          religion: f['Religion']||'',
+          seeking: f['Profil recherché']||'',
+          country: f['Pays de résidence']||'',
+          city: f['Ville de résidence']||'',
+          job: f['Profession']||'',
+          height: f['Taille (cm)']||null,
+          weight: f['Poids (kg)']||null,
+          bio: f['Bio']||'',
+          interests: (f["Centres d'intérêt"]||'').split(', ').filter(Boolean),
+          socials,
+          matchPref: mp
+        };
+      });
+    } catch(e) {
+      console.error('Erreur chargement profils:', e);
+      P = [];
+    }
+  }
+
+  // ========== AIRTABLE CONFIG ==========
+  const AIRTABLE_BASE_ID = 'appbBPn5mpJNW7x4n';
+  const AIRTABLE_TABLE_ID = 'tbliJk7e2g1Gaj6C4';
+  const AIRTABLE_API_KEY = 'pat4PKB1FTniW1MKg.837b53fbc583c07e2274a55527f0e17b6c806145d1de8b28a17f298e61fddfb1'; // À remplacer
+
+  async function saveToAirtable(profile) {
+    try {
+      const socials = Object.entries(profile.socials||{}).map(([net,pseudo]) => `${net}${pseudo?' : @'+pseudo:''}`).join(', ');
+      const mp = profile.matchPref || {};
+      const matchCriteria = [
+        mp.ageMin ? `Age min: ${mp.ageMin}` : '',
+        mp.ageMax ? `Age max: ${mp.ageMax}` : '',
+        mp.religion ? `Religion: ${mp.religion}` : '',
+        mp.nationality ? `Nationalité: ${mp.nationality}` : '',
+        mp.country ? `Pays: ${mp.country}` : '',
+        mp.status ? `Statut: ${mp.status}` : '',
+      ].filter(Boolean).join(' | ');
+
+      const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          fields: {
+            'Prénom': profile.name,
+            'Âge': profile.age,
+            'Genre': profile.gender,
+            'Recherche': profile.looking,
+            'Nationalité': profile.nat || '',
+            'Statut marital': profile.status || '',
+            'Religion': profile.religion || '',
+            'Profil recherché': profile.seeking || '',
+            'Pays de résidence': profile.country || '',
+            'Ville de résidence': profile.city || '',
+            'Profession': profile.job || '',
+            'Taille (cm)': profile.height || null,
+            'Poids (kg)': profile.weight || null,
+            'Bio': profile.bio || '',
+            "Centres d'intérêt": profile.interests.join(', '),
+            'Réseaux sociaux': socials,
+            'Critères matching': matchCriteria,
+            'Date inscription': new Date().toISOString(),
+            'Statut': '⏳ En attente'
+          }
+        })
+      });
+      if (!response.ok) console.error('Airtable error:', await response.text());
+    } catch(e) {
+      console.error('Airtable save error:', e);
+    }
+  }
+  // ========================================
+
 const AC=['#FBEAF0/#D4537E','#E1F5EE/#1D9E75','#E6F1FB/#185FA5','#FAEEDA/#BA7517','#EEEDFE/#534AB7','#FAECE7/#993C1D'];
 const gc=i=>{const p=AC[i%AC.length].split('/');return{bg:p[0],t:p[1]};};
 const ini=n=>n.split(' ').map(x=>x[0]).join('').toUpperCase().slice(0,2);
-const save2db=()=>localStorage.setItem('coeurlink_profiles',JSON.stringify(P));
+const save2db=()=>{}; // Profils gérés via Airtable
 
 function buildNets(){
   document.getElementById('s-body').innerHTML=NW.map(n=>`
@@ -519,12 +626,19 @@ function rch(){
   document.getElementById('i-body').classList.remove('open');
 }
 
-function go(t){
+async function go(t){
   document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('active',['register','profiles','match'][i]===t));
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById('sec-'+t).classList.add('active');
-  if(t==='profiles')rp();
-  if(t==='match')pms();
+  if(t==='profiles'){
+    document.getElementById('pg').innerHTML='<div class="es"><i class="ti ti-loader"></i><p>Chargement des profils validés...</p></div>';
+    await loadValidatedProfiles();
+    rp();
+  }
+  if(t==='match'){
+    await loadValidatedProfiles();
+    pms();
+  }
 }
 
 function save(){
@@ -556,8 +670,8 @@ function save(){
       country:document.getElementById('f-country-pref').value,
       status:document.getElementById('f-status-pref').value
     }});
-  save2db();
-  showToast('Profil de '+name+' enregistré ! 💌');
+  saveToAirtable({name,age,gender,looking,nat:document.getElementById('f-nat').value,status:document.getElementById('f-status').value,religion:document.getElementById('f-religion').value,seeking:document.getElementById('f-seeking').value,country:document.getElementById('f-country').value,city:document.getElementById('f-city').value.trim(),job:document.getElementById('f-job').value.trim(),height:document.getElementById('f-h').value?parseInt(document.getElementById('f-h').value):null,weight:document.getElementById('f-w').value?parseInt(document.getElementById('f-w').value):null,bio:document.getElementById('f-bio').value.trim(),interests:gch(),socials:gs(),matchPref:{ageMin:document.getElementById('f-agemin').value?parseInt(document.getElementById('f-agemin').value):null,ageMax:document.getElementById('f-agemax').value?parseInt(document.getElementById('f-agemax').value):null,religion:document.getElementById('f-rel-pref').value,nationality:document.getElementById('f-nat-pref').value,country:document.getElementById('f-country-pref').value,status:document.getElementById('f-status-pref').value}});
+  showToast('Inscription envoyée ! En attente de validation ⏳');
   ['f-name','f-age','f-city','f-job','f-h','f-w','f-bio'].forEach(id=>document.getElementById(id).value='');
   ['f-gender','f-looking','f-nat','f-status','f-religion','f-seeking','f-country','f-rel-pref','f-nat-pref','f-country-pref','f-status-pref'].forEach(id=>document.getElementById(id).value='');
   ['f-agemin','f-agemax'].forEach(id=>document.getElementById(id).value='');
