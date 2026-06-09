@@ -144,6 +144,47 @@
     .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--pink); color: white; padding: 11px 22px; border-radius: 22px; font-size: 13px; font-family: 'DM Sans', sans-serif; opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 999; white-space: nowrap; box-shadow: 0 4px 16px rgba(212,83,126,.35); }
     .toast.show { opacity: 1; }
 
+    /* MATCH TOP */
+    .match-top { display:flex; align-items:flex-end; gap:10px; margin-bottom:1.25rem; flex-wrap:wrap; }
+    .match-select-wrap { display:flex; flex-direction:column; gap:5px; flex:1; min-width:180px; }
+    .match-label { font-size:12px; color:var(--text2); font-weight:500; }
+
+    /* SELECTED PROFILE CARD */
+    .selected-profile-card { background:var(--pink-light); border:1.5px solid var(--pink); border-radius:var(--radius); padding:1rem 1.2rem; margin-bottom:1.25rem; display:flex; align-items:center; gap:14px; }
+    .spc-av { width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:700; flex-shrink:0; }
+    .spc-info { flex:1; }
+    .spc-name { font-weight:700; font-size:16px; color:var(--pink); }
+    .spc-meta { font-size:12px; color:var(--text2); margin-top:3px; }
+    .spc-tags { display:flex; flex-wrap:wrap; gap:5px; margin-top:7px; }
+    .spc-tag { font-size:11px; padding:3px 9px; border-radius:10px; background:white; color:var(--pink); border:1px solid var(--pink); }
+
+    /* MATCH RESULT CARDS */
+    .match-section-title { font-size:12px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--text2); margin:1.25rem 0 .75rem; display:flex; align-items:center; gap:8px; }
+    .match-section-title::after { content:''; flex:1; height:1px; background:var(--border); }
+    .mrc { background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius); padding:1rem 1.2rem; display:flex; align-items:center; gap:12px; margin-bottom:10px; transition:border-color .2s; }
+    .mrc:hover { border-color:var(--pink); }
+    .mrc.top-match { border:1.5px solid var(--pink); background:var(--pink-light); }
+    .match-rank { font-size:18px; flex-shrink:0; width:28px; text-align:center; }
+    .mscore { font-size:20px; font-weight:700; min-width:46px; text-align:center; }
+    .mscore.h { color:var(--pink); }
+    .mscore.m { color:#BA7517; }
+    .mscore.l { color:var(--text2); }
+    .mif { flex:1; min-width:0; }
+    .mn { font-weight:600; font-size:14px; }
+    .md { font-size:12px; color:var(--text2); margin-top:3px; }
+    .mbw { width:76px; height:6px; background:var(--bg3); border-radius:3px; overflow:hidden; flex-shrink:0; }
+    .mb { height:100%; border-radius:3px; background:var(--pink); }
+    .msp { margin-top:7px; display:flex; flex-wrap:wrap; gap:5px; }
+    .mpp { font-size:11px; padding:3px 9px; border-radius:10px; background:var(--bg3); color:var(--text2); }
+    .common-interests { margin-top:6px; display:flex; flex-wrap:wrap; gap:5px; }
+    .ci-tag { font-size:11px; padding:3px 9px; border-radius:10px; background:#E1F5EE; color:#0F6E56; }
+    .no-match { text-align:center; padding:2.5rem 1rem; color:var(--text2); }
+    .no-match i { font-size:36px; display:block; margin-bottom:10px; opacity:.3; }
+    .compatibility-bar { display:flex; align-items:center; gap:8px; margin-top:6px; }
+    .compat-label { font-size:11px; color:var(--text2); min-width:80px; }
+    .compat-track { flex:1; height:4px; background:var(--bg3); border-radius:2px; overflow:hidden; }
+    .compat-fill { height:100%; border-radius:2px; background:var(--pink); }
+
     @media (max-width: 520px) {
       .form-grid { grid-template-columns: 1fr; }
       .fg.full { grid-column: 1; }
@@ -202,6 +243,44 @@
             <option value="veuf">Veuf / Veuve</option>
           </select>
         </div>
+        <div class="fg"><label>Religion</label>
+          <select id="f-religion">
+            <option value="">Choisir...</option>
+            <option>Islam</option>
+            <option>Christianisme</option>
+            <option>Catholicisme</option>
+            <option>Protestantisme</option>
+            <option>Judaïsme</option>
+            <option>Bouddhisme</option>
+            <option>Hindouisme</option>
+            <option>Athée / Agnostique</option>
+            <option>Autre</option>
+            <option>Non précisé</option>
+          </select>
+        </div>
+        <div class="fg"><label>Profil recherché</label>
+          <select id="f-seeking">
+            <option value="">Choisir...</option>
+            <option>Relation sérieuse</option>
+            <option>Mariage</option>
+            <option>Amitié</option>
+            <option>Relation occasionnelle</option>
+            <option>Pas encore décidé(e)</option>
+          </select>
+        </div>
+        <div class="fg"><label>Pays de résidence</label>
+          <select id="f-country">
+            <option value="">Choisir...</option>
+            <option>🇫🇷 France</option><option>🇧🇪 Belgique</option><option>🇨🇭 Suisse</option><option>🇨🇦 Canada</option>
+            <option>🇩🇿 Algérie</option><option>🇲🇦 Maroc</option><option>🇹🇳 Tunisie</option><option>🇸🇳 Sénégal</option>
+            <option>🇨🇮 Côte d'Ivoire</option><option>🇨🇲 Cameroun</option><option>🇧🇯 Bénin</option><option>🇲🇱 Mali</option>
+            <option>🇬🇳 Guinée</option><option>🇧🇫 Burkina Faso</option><option>🇹🇬 Togo</option><option>🇨🇬 Congo</option>
+            <option>🇬🇧 Royaume-Uni</option><option>🇩🇪 Allemagne</option><option>🇪🇸 Espagne</option><option>🇮🇹 Italie</option>
+            <option>🇵🇹 Portugal</option><option>🇳🇱 Pays-Bas</option><option>🇺🇸 États-Unis</option><option>🇧🇷 Brésil</option>
+            <option>🇲🇽 Mexique</option><option>🇯🇵 Japon</option><option>🇨🇳 Chine</option><option>🇰🇷 Corée du Sud</option>
+            <option>🇮🇳 Inde</option><option>🇹🇷 Turquie</option><option>🇷🇺 Russie</option><option>🌍 Autre</option>
+          </select>
+        </div>
         <div class="fg"><label>Ville de résidence</label><input id="f-city" placeholder="Paris"/></div>
         <div class="fg"><label>Profession</label><input id="f-job" placeholder="Designer"/></div>
         <div class="fg"><label>Taille</label>
@@ -211,6 +290,59 @@
           <div class="iu"><input id="f-w" type="number" placeholder="65" min="30" max="300"/><span class="ul">kg</span></div>
         </div>
         <div class="fg full"><label>Bio</label><textarea id="f-bio" placeholder="Quelques mots sur moi..."></textarea></div>
+      </div>
+
+      <div class="fsl">Critères de matching</div>
+      <div class="form-grid">
+        <div class="fg"><label>Âge min recherché</label>
+          <div class="iu"><input id="f-agemin" type="number" placeholder="25" min="18" max="80"/><span class="ul">ans</span></div>
+        </div>
+        <div class="fg"><label>Âge max recherché</label>
+          <div class="iu"><input id="f-agemax" type="number" placeholder="40" min="18" max="80"/><span class="ul">ans</span></div>
+        </div>
+        <div class="fg"><label>Religion souhaitée</label>
+          <select id="f-rel-pref">
+            <option value="">Peu importe</option>
+            <option>Islam</option>
+            <option>Christianisme</option>
+            <option>Catholicisme</option>
+            <option>Protestantisme</option>
+            <option>Judaïsme</option>
+            <option>Bouddhisme</option>
+            <option>Hindouisme</option>
+            <option>Athée / Agnostique</option>
+            <option>Autre</option>
+          </select>
+        </div>
+        <div class="fg"><label>Nationalité souhaitée</label>
+          <select id="f-nat-pref">
+            <option value="">Peu importe</option>
+            <option>🇫🇷 Française</option><option>🇧🇪 Belge</option><option>🇨🇭 Suisse</option><option>🇨🇦 Canadienne</option>
+            <option>🇩🇿 Algérienne</option><option>🇲🇦 Marocaine</option><option>🇹🇳 Tunisienne</option><option>🇸🇳 Sénégalaise</option>
+            <option>🇨🇮 Ivoirienne</option><option>🇨🇲 Camerounaise</option><option>🇧🇯 Béninoise</option><option>🇲🇱 Malienne</option>
+            <option>🇬🇧 Britannique</option><option>🇩🇪 Allemande</option><option>🇪🇸 Espagnole</option><option>🇮🇹 Italienne</option>
+            <option>🇵🇹 Portugaise</option><option>🇺🇸 Américaine</option><option>🇧🇷 Brésilienne</option><option>🌍 Autre</option>
+          </select>
+        </div>
+        <div class="fg"><label>Pays souhaité</label>
+          <select id="f-country-pref">
+            <option value="">Peu importe</option>
+            <option>🇫🇷 France</option><option>🇧🇪 Belgique</option><option>🇨🇭 Suisse</option><option>🇨🇦 Canada</option>
+            <option>🇩🇿 Algérie</option><option>🇲🇦 Maroc</option><option>🇹🇳 Tunisie</option><option>🇸🇳 Sénégal</option>
+            <option>🇨🇮 Côte d'Ivoire</option><option>🇨🇲 Cameroun</option><option>🇬🇧 Royaume-Uni</option>
+            <option>🇩🇪 Allemagne</option><option>🇪🇸 Espagne</option><option>🇮🇹 Italie</option><option>🇺🇸 États-Unis</option>
+            <option>🌍 Autre</option>
+          </select>
+        </div>
+        <div class="fg"><label>Statut marital souhaité</label>
+          <select id="f-status-pref">
+            <option value="">Peu importe</option>
+            <option value="celibataire">Célibataire</option>
+            <option value="divorce">Divorcé(e)</option>
+            <option value="separe">Séparé(e)</option>
+            <option value="veuf">Veuf / Veuve</option>
+          </select>
+        </div>
       </div>
 
       <div class="fsl">Réseaux sociaux</div>
@@ -273,11 +405,18 @@
 
   <!-- ======== MATCH ======== -->
   <div class="section" id="sec-match">
-    <p class="mi">Sélectionnez un profil pour découvrir ses meilleures compatibilités selon les intérêts, l'âge, la ville et les réseaux sociaux partagés.</p>
-    <div class="mc2">
-      <select id="msel"><option value="">— Choisir un profil —</option></select>
-      <button class="bm" onclick="runMatch()">Trouver des matches 💘</button>
+    <div class="match-top">
+      <div class="match-select-wrap">
+        <label class="match-label">Choisir un profil</label>
+        <select id="msel"><option value="">— Sélectionner —</option></select>
+      </div>
+      <button class="bm" onclick="runMatch()">🔍 Trouver mes doubles</button>
     </div>
+
+    <!-- Résumé du profil sélectionné -->
+    <div id="match-profile-card" style="display:none" class="selected-profile-card"></div>
+
+    <!-- Résultats -->
     <div id="mr"></div>
   </div>
 
@@ -401,15 +540,27 @@ function save(){
   P.push({id:Date.now(),name,age,gender,looking,
     nat:document.getElementById('f-nat').value,
     status:document.getElementById('f-status').value,
+    religion:document.getElementById('f-religion').value,
+    seeking:document.getElementById('f-seeking').value,
+    country:document.getElementById('f-country').value,
     city:document.getElementById('f-city').value.trim(),
     job:document.getElementById('f-job').value.trim(),
     height:h?parseInt(h):null,weight:w?parseInt(w):null,
     bio:document.getElementById('f-bio').value.trim(),
-    interests:gch(),socials:gs()});
+    interests:gch(),socials:gs(),
+    matchPref:{
+      ageMin:document.getElementById('f-agemin').value?parseInt(document.getElementById('f-agemin').value):null,
+      ageMax:document.getElementById('f-agemax').value?parseInt(document.getElementById('f-agemax').value):null,
+      religion:document.getElementById('f-rel-pref').value,
+      nationality:document.getElementById('f-nat-pref').value,
+      country:document.getElementById('f-country-pref').value,
+      status:document.getElementById('f-status-pref').value
+    }});
   save2db();
   showToast('Profil de '+name+' enregistré ! 💌');
   ['f-name','f-age','f-city','f-job','f-h','f-w','f-bio'].forEach(id=>document.getElementById(id).value='');
-  ['f-gender','f-looking','f-nat','f-status'].forEach(id=>document.getElementById(id).value='');
+  ['f-gender','f-looking','f-nat','f-status','f-religion','f-seeking','f-country','f-rel-pref','f-nat-pref','f-country-pref','f-status-pref'].forEach(id=>document.getElementById(id).value='');
+  ['f-agemin','f-agemax'].forEach(id=>document.getElementById(id).value='');
   rs();rch();
 }
 
@@ -433,13 +584,23 @@ function rp(){
 
 function pms(){
   const s=document.getElementById('msel');
-  s.innerHTML='<option value="">— Choisir un profil —</option>';
+  s.innerHTML='<option value="">— Sélectionner —</option>';
   P.forEach(p=>{const o=document.createElement('option');o.value=p.id;o.textContent=p.name+', '+p.age+' ans';s.appendChild(o);});
   document.getElementById('mr').innerHTML='';
+  document.getElementById('match-profile-card').style.display='none';
 }
 
 function score(a,b){
   if(!((a.looking==='Tous'||a.looking===b.gender)&&(b.looking==='Tous'||b.looking===a.gender)))return 0;
+  // Critères éliminatoires matchPref
+  const mp=a.matchPref||{};
+  if(mp.ageMin&&b.age<mp.ageMin)return 0;
+  if(mp.ageMax&&b.age>mp.ageMax)return 0;
+  if(mp.religion&&b.religion&&mp.religion!==b.religion)return 0;
+  if(mp.nationality&&b.nat&&mp.nationality!==b.nat)return 0;
+  if(mp.country&&b.country&&mp.country!==b.country)return 0;
+  if(mp.status&&b.status&&mp.status!==b.status)return 0;
+  // Score
   let s=0;
   s+=a.interests.filter(i=>b.interests.includes(i)).length*15;
   const d=Math.abs(a.age-b.age);s+=d<=3?25:d<=7?15:d<=12?5:0;
@@ -447,29 +608,102 @@ function score(a,b){
   s+=Object.keys(a.socials||{}).filter(n=>Object.keys(b.socials||{}).includes(n)).length*8;
   if(a.nat&&b.nat&&a.nat===b.nat)s+=10;
   if(a.status&&b.status&&a.status===b.status)s+=5;
+  if(a.religion&&b.religion&&a.religion===b.religion)s+=10;
+  if(a.seeking&&b.seeking&&a.seeking===b.seeking)s+=10;
+  if(a.country&&b.country&&a.country===b.country)s+=10;
   return Math.min(s,99);
 }
 
 function runMatch(){
   const id=parseInt(document.getElementById('msel').value);
   const r=document.getElementById('mr');
+  const spc=document.getElementById('match-profile-card');
   if(!id){showToast('Choisissez un profil ⚠️');return;}
   const tgt=P.find(p=>p.id===id);
   const oth=P.filter(p=>p.id!==id);
-  if(!oth.length){r.innerHTML='<p style="color:#6b6b6b;font-size:14px;padding:1rem 0">Pas encore assez de profils.</p>';return;}
-  const sc=oth.map(p=>({...p,score:score(tgt,p)})).filter(p=>p.score>0).sort((a,b)=>b.score-a.score);
-  if(!sc.length){r.innerHTML='<p style="color:#6b6b6b;font-size:14px;padding:1rem 0">Aucune compatibilité trouvée.</p>';return;}
-  r.innerHTML=sc.map((p,i)=>{
-    const c=gc(i);
-    const cls=p.score>=60?'h':p.score>=35?'m':'l';
-    const cm=tgt.interests.filter(x=>p.interests.includes(x)).join(', ')||'—';
-    const cn=Object.keys(tgt.socials||{}).filter(n=>Object.keys(p.socials||{}).includes(n));
-    const nh=cn.length?`<div class="msp">${cn.map(n=>{const net=NW.find(x=>x.id===n);const ps=p.socials[n];return`<span class="mpp">${net?net.icon:''} ${net?net.name:n}${ps?' · @'+ps:''}</span>`;}).join('')}</div>`:'';
-    const sl=p.status?` · ${SL[p.status]}`:'';
-    const nl=p.nat?` · ${p.nat}`:'';
-    const ph=[];if(p.height)ph.push(`📏${p.height}cm`);if(p.weight)ph.push(`⚖️${p.weight}kg`);
-    return`<div class="mrc"><div class="av" style="background:${c.bg};color:${c.t};width:42px;height:42px;font-size:15px;flex-shrink:0">${ini(p.name)}</div><div class="mif"><div class="mn">${p.name}, ${p.age} ans · 📍 ${p.city||'—'}${sl}${nl}</div><div class="md">${ph.length?ph.join(' · ')+' · ':''}Intérêts : ${cm}</div>${nh}</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0"><span class="mscore ${cls}">${p.score}%</span><div class="mbw"><div class="mb" style="width:${p.score}%"></div></div></div></div>`;
-  }).join('');
+
+  // Afficher la carte du profil sélectionné
+  const ci=P.indexOf(tgt);
+  const cc=gc(ci);
+  spc.style.display='flex';
+  const tgtTags=[
+    tgt.status?`<span class="spc-tag">${SL[tgt.status]}</span>`:'',
+    tgt.nat?`<span class="spc-tag">${tgt.nat}</span>`:'',
+    tgt.religion?`<span class="spc-tag">🕊️ ${tgt.religion}</span>`:'',
+    tgt.seeking?`<span class="spc-tag">🔍 ${tgt.seeking}</span>`:'',
+    tgt.height?`<span class="spc-tag">📏 ${tgt.height}cm</span>`:'',
+    tgt.weight?`<span class="spc-tag">⚖️ ${tgt.weight}kg</span>`:'',
+  ].filter(Boolean).join('');
+  spc.innerHTML=`<div class="spc-av" style="background:${cc.bg};color:${cc.t}">${ini(tgt.name)}</div>
+    <div class="spc-info">
+      <div class="spc-name">${tgt.name}, ${tgt.age} ans</div>
+      <div class="spc-meta">${tgt.gender} · 📍 ${tgt.city||'—'}${tgt.country?' · '+tgt.country:''}</div>
+      <div class="spc-meta">${tgt.job||''}</div>
+      <div class="spc-tags">${tgtTags}</div>
+    </div>`;
+
+  if(!oth.length){r.innerHTML='<div class="no-match"><i class="ti ti-users"></i><p>Pas encore assez de profils pour matcher.</p></div>';return;}
+
+  const sc=oth.map(p=>({...p,score:score(tgt,p),details:getScoreDetails(tgt,p)})).filter(p=>p.score>0).sort((a,b)=>b.score-a.score);
+
+  if(!sc.length){r.innerHTML='<div class="no-match"><i class="ti ti-heart-off"></i><p>Aucun profil compatible trouvé selon vos critères.</p></div>';return;}
+
+  // Séparer en groupes
+  const top=sc.filter(p=>p.score>=60);
+  const mid=sc.filter(p=>p.score>=35&&p.score<60);
+  const low=sc.filter(p=>p.score<35);
+
+  let html='';
+
+  if(top.length) html+=`<div class="match-section-title">💘 Très compatibles (${top.length})</div>`+top.map((p,i)=>renderMatch(p,i,tgt,true)).join('');
+  if(mid.length) html+=`<div class="match-section-title">💛 Compatibles (${mid.length})</div>`+mid.map((p,i)=>renderMatch(p,i,tgt,false)).join('');
+  if(low.length) html+=`<div class="match-section-title">🤍 Peu compatibles (${low.length})</div>`+low.map((p,i)=>renderMatch(p,i,tgt,false)).join('');
+
+  r.innerHTML=html;
+}
+
+function getScoreDetails(a,b){
+  const commonInterests=a.interests.filter(i=>b.interests.includes(i));
+  const commonNets=Object.keys(a.socials||{}).filter(n=>Object.keys(b.socials||{}).includes(n));
+  const sameCity=a.city&&b.city&&a.city.toLowerCase()===b.city.toLowerCase();
+  const sameCountry=a.country&&b.country&&a.country===b.country;
+  const sameReligion=a.religion&&b.religion&&a.religion===b.religion;
+  const sameNat=a.nat&&b.nat&&a.nat===b.nat;
+  const sameSeeking=a.seeking&&b.seeking&&a.seeking===b.seeking;
+  const ageDiff=Math.abs(a.age-b.age);
+  return{commonInterests,commonNets,sameCity,sameCountry,sameReligion,sameNat,sameSeeking,ageDiff};
+}
+
+function renderMatch(p,i,tgt,isTop){
+  const c=gc(i);
+  const cls=p.score>=60?'h':p.score>=35?'m':'l';
+  const d=p.details;
+  const ph=[];if(p.height)ph.push(`📏${p.height}cm`);if(p.weight)ph.push(`⚖️${p.weight}kg`);
+  const commonChips=d.commonInterests.slice(0,4).map(x=>`<span class="ci-tag">${x}</span>`).join('');
+  const extraInt=d.commonInterests.length>4?`<span class="ci-tag">+${d.commonInterests.length-4}</span>`:'';
+  const netHtml=d.commonNets.length?`<div class="msp">${d.commonNets.map(n=>{const net=NW.find(x=>x.id===n);const ps=p.socials[n];return`<span class="mpp">${net?net.icon:''} ${net?net.name:n}${ps?' · @'+ps:''}</span>`;}).join('')}</div>`:'';
+  const points=[];
+  if(d.sameCity) points.push('📍 Même ville');
+  if(d.sameCountry&&!d.sameCity) points.push('🌍 Même pays');
+  if(d.sameReligion) points.push('🕊️ Même religion');
+  if(d.sameNat) points.push('🏳️ Même nationalité');
+  if(d.sameSeeking) points.push('🎯 Même objectif');
+  if(d.ageDiff<=3) points.push('🎂 Âges proches');
+  const pointsHtml=points.length?`<div class="msp">${points.map(pt=>`<span class="mpp">${pt}</span>`).join('')}</div>`:'';
+  return`<div class="mrc${isTop?' top-match':''}">
+    <div class="av" style="background:${c.bg};color:${c.t};width:44px;height:44px;font-size:15px;flex-shrink:0">${ini(p.name)}</div>
+    <div class="mif">
+      <div class="mn">${p.name}, ${p.age} ans · 📍 ${p.city||'—'}${p.country?' · '+p.country:''}</div>
+      <div class="md">${p.gender}${p.job?' · '+p.job:''}${ph.length?' · '+ph.join(' '):''}${p.religion?' · 🕊️ '+p.religion:''}</div>
+      ${d.commonInterests.length?`<div class="common-interests">${commonChips}${extraInt}</div>`:''}
+      ${pointsHtml}
+      ${netHtml}
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0">
+      <span class="mscore ${cls}">${p.score}%</span>
+      <div class="mbw"><div class="mb" style="width:${p.score}%"></div></div>
+    </div>
+  </div>`;
 }
 
 function showToast(msg){
