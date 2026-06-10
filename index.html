@@ -482,28 +482,28 @@ function populateSel(){
   P.forEach(p=>{const o=document.createElement('option');o.value=p.id;o.textContent=p.name+', '+p.age+' ans';s.appendChild(o);});
 }
 function calcScore(a,b){
-  const mp=a.mp||{};
-  if(mp.ageMin&&b.age<parseInt(mp.ageMin))return 0;
-  if(mp.ageMax&&b.age>parseInt(mp.ageMax))return 0;
-  if(mp.hMin&&b.height&&b.height<parseInt(mp.hMin))return 0;
-  if(mp.hMax&&b.height&&b.height>parseInt(mp.hMax))return 0;
-  if(mp.wMin&&b.weight&&b.weight<parseInt(mp.wMin))return 0;
-  if(mp.wMax&&b.weight&&b.weight>parseInt(mp.wMax))return 0;
-  if(mp.gender&&b.gender&&mp.gender!==b.gender)return 0;
-  if(mp.status&&b.status&&mp.status!==b.status)return 0;
-  if(mp.religion&&b.religion&&mp.religion!==b.religion)return 0;
-  if(mp.seeking&&b.seeking&&mp.seeking!==b.seeking)return 0;
-  if(mp.nat&&b.nat&&mp.nat!==b.nat)return 0;
-  if(mp.country&&b.country&&mp.country!==b.country)return 0;
-  let s=0;
+  let s=10; // score de base minimum
+  // Points communs = bonus
   s+=a.interests.filter(i=>b.interests.includes(i)).length*15;
-  const d=Math.abs(a.age-b.age);s+=d<=3?25:d<=7?15:d<=12?5:0;
+  const d=Math.abs(a.age-b.age);
+  s+=d<=3?25:d<=7?18:d<=12?10:d<=20?5:0;
   if(a.city&&b.city&&a.city.toLowerCase()===b.city.toLowerCase())s+=20;
-  if(a.nat&&b.nat&&a.nat===b.nat)s+=10;
-  if(a.religion&&b.religion&&a.religion===b.religion)s+=10;
-  if(a.seeking&&b.seeking&&a.seeking===b.seeking)s+=10;
-  if(a.country&&b.country&&a.country===b.country)s+=8;
-  return Math.min(s,99);
+  if(a.country&&b.country&&a.country===b.country)s+=12;
+  if(a.nat&&b.nat&&a.nat===b.nat)s+=12;
+  if(a.religion&&b.religion&&a.religion===b.religion)s+=15;
+  if(a.seeking&&b.seeking&&a.seeking===b.seeking)s+=15;
+  if(a.status&&b.status&&a.status===b.status)s+=8;
+  // Critères de recherche = bonus supplémentaires si correspondance
+  const mp=a.mp||{};
+  if(mp.religion&&b.religion&&mp.religion===b.religion)s+=10;
+  if(mp.nat&&b.nat&&mp.nat===b.nat)s+=10;
+  if(mp.country&&b.country&&mp.country===b.country)s+=8;
+  if(mp.status&&b.status&&mp.status===b.status)s+=5;
+  if(mp.seeking&&b.seeking&&mp.seeking===b.seeking)s+=5;
+  // Pénalités légères si critères d'âge non respectés
+  if(mp.ageMin&&b.age<parseInt(mp.ageMin))s-=20;
+  if(mp.ageMax&&b.age>parseInt(mp.ageMax))s-=20;
+  return Math.max(Math.min(s,99),1); // minimum 1% toujours
 }
 async function runMatch(){
   const id=document.getElementById('msel').value;
