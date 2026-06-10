@@ -196,6 +196,31 @@
 </head>
 <body>
 
+<!-- ECRAN DE CONNEXION -->
+<div id="login-screen" style="display:none;min-height:100vh;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:1.5rem;">
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;max-width:400px;width:100%;text-align:center;">
+    <div style="font-family:'Playfair Display',serif;font-size:28px;margin-bottom:8px;">coeur<span style="color:#D4537E;">link</span></div>
+    <p style="color:var(--text2);font-size:14px;margin-bottom:1.5rem;">Entrez votre code d'accès pour accéder aux profils</p>
+    <div id="login-tabs" style="display:flex;gap:8px;margin-bottom:1.25rem;">
+      <button onclick="showLoginTab('code')" id="tab-code" style="flex:1;padding:8px;border-radius:20px;border:1px solid #D4537E;background:#D4537E;color:white;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;">🔐 J'ai un code</button>
+      <button onclick="showLoginTab('register')" id="tab-register" style="flex:1;padding:8px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;">📝 M'inscrire</button>
+    </div>
+    <!-- Code access -->
+    <div id="login-code-panel">
+      <input id="access-code-input" type="text" placeholder="Votre code d'accès (ex: LOVE-1234)" style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);font-size:14px;font-family:'DM Sans',sans-serif;text-align:center;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;"/>
+      <button onclick="checkAccessCode()" style="width:100%;padding:11px;background:#D4537E;color:white;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">Accéder 💘</button>
+      <p style="color:var(--text2);font-size:12px;margin-top:10px;">Votre code vous a été communiqué après validation de votre profil.</p>
+    </div>
+    <!-- Register panel -->
+    <div id="login-register-panel" style="display:none;">
+      <p style="color:var(--text2);font-size:13px;margin-bottom:12px;">Créez votre profil pour rejoindre CoeurLink. Après validation, vous recevrez votre code d'accès.</p>
+      <button onclick="goToRegister()" style="width:100%;padding:11px;background:#D4537E;color:white;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">Créer mon profil 💌</button>
+    </div>
+    <div id="login-error" style="color:#D4537E;font-size:13px;margin-top:10px;display:none;">Code incorrect. Vérifiez votre code d'accès.</div>
+  </div>
+</div>
+
+<div id="main-app" style="display:none;">
 <div class="header">
   <div class="logo">coeur<span>link</span></div>
   <div class="tabs">
@@ -459,6 +484,7 @@
 
 </div><!-- /main -->
 
+</div><!-- /main-app -->
 <div class="toast" id="toast"></div>
 
 <script>
@@ -577,6 +603,7 @@ let P=[]; // Profils validés chargés depuis Airtable
             'Réseaux sociaux': socials,
             'Critères matching': matchCriteria,
             'Téléphone': profile.phone || '',
+            'Code accès': profile.accessCode || '',
             'Date inscription': new Date().toISOString(),
             'Statut': '⏳ En attente'
           }
@@ -717,7 +744,7 @@ function save(){
       city:document.getElementById('f-city-pref').value.trim(),
       job:document.getElementById('f-job-pref').value.trim()
     }});
-  saveToAirtable({name,age,gender,looking,nat:document.getElementById('f-nat').value,status:document.getElementById('f-status').value,religion:document.getElementById('f-religion').value,seeking:document.getElementById('f-seeking').value,country:document.getElementById('f-country').value,city:document.getElementById('f-city').value.trim(),job:document.getElementById('f-job').value.trim(),height:document.getElementById('f-h').value?parseInt(document.getElementById('f-h').value):null,weight:document.getElementById('f-w').value?parseInt(document.getElementById('f-w').value):null,bio:document.getElementById('f-bio').value.trim(),interests:gch(),socials:gs(),matchPref:{ageMin:document.getElementById('f-agemin').value?parseInt(document.getElementById('f-agemin').value):null,ageMax:document.getElementById('f-agemax').value?parseInt(document.getElementById('f-agemax').value):null,religion:document.getElementById('f-rel-pref').value,nationality:document.getElementById('f-nat-pref').value,country:document.getElementById('f-country-pref').value,status:document.getElementById('f-status-pref').value}});
+  saveToAirtable({name,age,gender,looking,accessCode,nat:document.getElementById('f-nat').value,status:document.getElementById('f-status').value,religion:document.getElementById('f-religion').value,seeking:document.getElementById('f-seeking').value,country:document.getElementById('f-country').value,city:document.getElementById('f-city').value.trim(),job:document.getElementById('f-job').value.trim(),height:document.getElementById('f-h').value?parseInt(document.getElementById('f-h').value):null,weight:document.getElementById('f-w').value?parseInt(document.getElementById('f-w').value):null,bio:document.getElementById('f-bio').value.trim(),interests:gch(),socials:gs(),matchPref:{ageMin:document.getElementById('f-agemin').value?parseInt(document.getElementById('f-agemin').value):null,ageMax:document.getElementById('f-agemax').value?parseInt(document.getElementById('f-agemax').value):null,religion:document.getElementById('f-rel-pref').value,nationality:document.getElementById('f-nat-pref').value,country:document.getElementById('f-country-pref').value,status:document.getElementById('f-status-pref').value}});
   showToast('Inscription envoyée ! En attente de validation ⏳');
   ['f-name','f-age','f-city','f-job','f-h','f-w','f-bio','f-phone'].forEach(id=>document.getElementById(id).value='');
   ['f-gender','f-looking','f-nat','f-status','f-religion','f-seeking','f-country','f-rel-pref','f-nat-pref','f-country-pref','f-status-pref','f-gender-pref','f-seeking-pref'].forEach(id=>document.getElementById(id).value='');
@@ -884,6 +911,70 @@ function showToast(msg){
 }
 
 buildNets();
+
+// ========== SYSTÈME DE CONNEXION ==========
+function initApp(){
+  const isLogged = sessionStorage.getItem('cl_logged');
+  if(isLogged==='true'){
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('main-app').style.display='block';
+  } else {
+    document.getElementById('login-screen').style.display='flex';
+    document.getElementById('main-app').style.display='none';
+  }
+}
+
+function showLoginTab(tab){
+  document.getElementById('login-code-panel').style.display = tab==='code'?'block':'none';
+  document.getElementById('login-register-panel').style.display = tab==='register'?'block':'none';
+  document.getElementById('tab-code').style.background = tab==='code'?'#D4537E':'transparent';
+  document.getElementById('tab-code').style.color = tab==='code'?'white':'var(--text2)';
+  document.getElementById('tab-register').style.background = tab==='register'?'#D4537E':'transparent';
+  document.getElementById('tab-register').style.color = tab==='register'?'white':'var(--text2)';
+}
+
+async function checkAccessCode(){
+  const code = document.getElementById('access-code-input').value.trim().toUpperCase();
+  const errEl = document.getElementById('login-error');
+  if(!code){ errEl.style.display='block'; errEl.textContent='Veuillez entrer votre code.'; return; }
+  try {
+    const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}?filterByFormula=AND({Code accès}='${code}',{Statut}='✅ Validé')`;
+    const res = await fetch(url, { headers:{'Authorization':`Bearer ${AIRTABLE_API_KEY}`} });
+    const data = await res.json();
+    if(data.records && data.records.length>0){
+      sessionStorage.setItem('cl_logged','true');
+      sessionStorage.setItem('cl_name', data.records[0].fields['Prénom']||'');
+      document.getElementById('login-screen').style.display='none';
+      document.getElementById('main-app').style.display='block';
+      errEl.style.display='none';
+    } else {
+      errEl.style.display='block';
+      errEl.textContent='Code incorrect ou profil non encore validé.';
+    }
+  } catch(e){
+    errEl.style.display='block';
+    errEl.textContent='Erreur de connexion. Réessayez.';
+  }
+}
+
+function goToRegister(){
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('main-app').style.display='block';
+  go('register');
+}
+
+// Ajouter bouton déconnexion dans le header
+document.addEventListener('DOMContentLoaded', function(){
+  const header = document.querySelector('.header');
+  const logoutBtn = document.createElement('button');
+  logoutBtn.textContent = '🚪 Déconnexion';
+  logoutBtn.style.cssText = 'padding:6px 12px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);font-size:12px;cursor:pointer;font-family:DM Sans,sans-serif;';
+  logoutBtn.onclick = ()=>{ sessionStorage.removeItem('cl_logged'); sessionStorage.removeItem('cl_name'); initApp(); };
+  header.appendChild(logoutBtn);
+});
+
+initApp();
+// ==========================================
 </script>
 </body>
 </html>
