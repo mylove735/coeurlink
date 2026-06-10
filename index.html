@@ -271,13 +271,14 @@ async function checkCode(){
   if(!code){err.style.display='block';err.textContent='Entrez votre code.';return;}
   try{
     // Fetch ALL records and check code + statut manually
-    const url=`https://api.airtable.com/v0/${AT_BASE}/${AT_TABLE}?fields[]=fldD1LRTL3kvc9JW5&fields[]=fldVfbcbnhXeEGksj&fields[]=fld5OeXHlmRPVAnZz`;
+    const url=`https://api.airtable.com/v0/${AT_BASE}/${AT_TABLE}`;
     const res=await fetch(url,{headers:{'Authorization':'Bearer '+AT_KEY}});
     const data=await res.json();
     console.log('All records:', JSON.stringify(data));
     const match = (data.records||[]).find(r => {
-      const recordCode = (r.fields['fldD1LRTL3kvc9JW5']||'').toString().trim();
-      const statut = (r.fields['fldVfbcbnhXeEGksj']||'').toString().trim();
+      const f = r.fields;
+      const recordCode = (f['Code accès']||'').toString().trim();
+      const statut = (f['Statut']||'').toString().trim();
       console.log('Code:', recordCode, 'Statut:', statut, 'Input:', code);
       return recordCode === code.trim() && statut.includes('Valid');
     });
