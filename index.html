@@ -315,7 +315,7 @@
           <div class="iu"><input id="f-w" type="number" placeholder="65" min="30" max="300"/><span class="ul">kg</span></div>
         </div>
         <div class="fg full"><label>Bio</label><textarea id="f-bio" placeholder="Quelques mots sur moi..."></textarea></div>
-        <div class="fg full"><label>Téléphone</label><input id="f-phone" type="tel" placeholder="+33 6 00 00 00 00"/></div>
+        <div class="fg full"><label>Profil TikTok (pour le premier contact) *</label><div style="position:relative"><span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px;">🎵 @</span><input id="f-phone" type="text" placeholder="votre_pseudo_tiktok" style="padding-left:44px;"/></div></div>
       </div>
 
       <div class="fsl">Critères de matching</div>
@@ -602,7 +602,7 @@ let P=[]; // Profils validés chargés depuis Airtable
             "Centres d'intérêt": profile.interests.join(', '),
             'Réseaux sociaux': socials,
             'Critères matching': matchCriteria,
-            'Téléphone': profile.phone || '',
+            'TikTok Contact': profile.phone || '',
             'Code accès': profile.accessCode || '',
             'Date inscription': new Date().toISOString(),
             'Statut': '⏳ En attente'
