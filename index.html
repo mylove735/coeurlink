@@ -107,7 +107,15 @@
       <p style="color:var(--text2);font-size:12px;margin-top:10px">Le code vous est communiqué après validation de votre profil.</p>
     </div>
     <div id="panel-new" style="display:none">
-      <p style="color:var(--text2);font-size:13px;margin-bottom:12px">Créez votre profil. Après validation vous recevrez votre code d'accès.</p>
+      <p style="color:var(--text2);font-size:13px;margin-bottom:12px">Créez votre profil. Après validation, réclamez votre code d'accès en contactant :</p>
+      <div style="background:var(--pink-light);border:1px solid var(--pink);border-radius:10px;padding:12px;margin-bottom:14px;">
+        <div style="font-size:13px;font-weight:600;color:var(--pink);margin-bottom:4px;">📲 Réclamer votre code</div>
+        <div style="font-size:13px;color:var(--text2)">Après inscription, contactez-nous sur TikTok :</div>
+        <a href="https://www.tiktok.com/@akham_usirem" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:8px;background:white;border:1px solid var(--border);border-radius:8px;padding:8px 14px;text-decoration:none;color:var(--text);font-weight:600;font-size:14px;">
+          🎵 <span>@akham_usirem</span>
+        </a>
+        <div style="font-size:11px;color:var(--text2);margin-top:8px;">Envoyez votre prénom + âge en message privé pour recevoir votre code.</div>
+      </div>
       <button class="login-btn" onclick="goRegister()">Créer mon profil 💌</button>
     </div>
     <div class="login-err" id="login-err">Code incorrect ou profil non validé.</div>
@@ -360,11 +368,11 @@ async function saveProfile(){
       }})
     });
     if(res.ok){
-      showToast('✅ Inscription envoyée ! Votre code : '+code+' (notez-le !)');
+      showToast('✅ Inscription envoyée ! Contactez @akham_usirem sur TikTok pour votre code.');
       ['f-name','f-age','f-city','f-job','f-h','f-w','f-bio','f-tiktok','f-agemin','f-agemax','f-hmin','f-hmax','f-wmin','f-wmax','f-citypref','f-jobpref'].forEach(id=>document.getElementById(id).value='');
       ['f-gender','f-looking','f-nat','f-status','f-religion','f-seeking','f-country','f-gpref','f-spref','f-rpref','f-sekpref','f-natpref','f-cpref'].forEach(id=>document.getElementById(id).value='');
       rch();
-      setTimeout(()=>showToast('Code: '+code+' — Conservez-le précieusement !'),4000);
+      setTimeout(()=>showToast('📲 TikTok : @akham_usirem — Mentionnez votre prénom + âge'),5000);
     } else {
       const err=await res.json();
       showToast('Erreur: '+JSON.stringify(err));
