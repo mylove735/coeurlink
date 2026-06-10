@@ -251,7 +251,7 @@
 <script>
 const AT_BASE = 'appbBPn5mpJNW7x4n';
 const AT_TABLE = 'tbliJk7e2g1Gaj6C4';
-const AT_KEY = 'pat4PKB1FTniW1MKg.837b53fbc583c07e2274a55527f0e17b6c806145d1de8b28a17f298e61fddfb1';
+const AT_KEY = 'patAteCFrrhkYdMAF.34f0c21e37b19b3946b4f3fe71fabba6895efef207fe2943112d79b97d267a07';
 const SL={celibataire:'Célibataire',divorce:'Divorcé(e)',separe:'Séparé(e)',veuf:'Veuf/Veuve'};
 const SC={celibataire:'sc',divorce:'sd',separe:'ss',veuf:'sv'};
 const AC=['#FBEAF0/#D4537E','#E1F5EE/#1D9E75','#E6F1FB/#185FA5','#FAEEDA/#BA7517','#EEEDFE/#534AB7','#FAECE7/#993C1D'];
@@ -270,24 +270,24 @@ async function checkCode(){
   const err=document.getElementById('login-err');
   if(!code){err.style.display='block';err.textContent='Entrez votre code.';return;}
   try{
-    // Search all validated profiles and check code manually
-    const url=`https://api.airtable.com/v0/${AT_BASE}/${AT_TABLE}?filterByFormula={Statut}='%E2%9C%85 Valid%C3%A9'&fields[]=Code+acc%C3%A8s&fields[]=Pr%C3%A9nom`;
+    // Fetch ALL records and check code + statut manually
+    const url=`https://api.airtable.com/v0/${AT_BASE}/${AT_TABLE}?fields[]=fldD1LRTL3kvc9JW5&fields[]=fldVfbcbnhXeEGksj&fields[]=fld5OeXHlmRPVAnZz`;
     const res=await fetch(url,{headers:{'Authorization':'Bearer '+AT_KEY}});
     const data=await res.json();
-    console.log('Validated profiles:', data);
+    console.log('All records:', JSON.stringify(data));
     const match = (data.records||[]).find(r => {
-      const c = (r.fields['Code accès']||'').trim();
-      return c.toLowerCase() === code.toLowerCase();
+      const recordCode = (r.fields['fldD1LRTL3kvc9JW5']||'').toString().trim();
+      const statut = (r.fields['fldVfbcbnhXeEGksj']||'').toString().trim();
+      console.log('Code:', recordCode, 'Statut:', statut, 'Input:', code);
+      return recordCode === code.trim() && statut.includes('Valid');
     });
     if(match){
       sessionStorage.setItem('cl','ok');
-      sessionStorage.setItem('cl_name', match.fields['Prénom']||'');
       showApp();
       err.style.display='none';
     } else {
       err.style.display='block';
       err.textContent='Code incorrect ou profil non encore validé.';
-      console.log('Code entered:', code, 'Records:', (data.records||[]).map(r=>r.fields['Code accès']));
     }
   }catch(e){
     err.style.display='block';
