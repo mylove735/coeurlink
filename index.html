@@ -102,7 +102,7 @@
       <button class="ltab" onclick="loginTab('new')">📝 M'inscrire</button>
     </div>
     <div id="panel-code">
-      <input class="login-input" id="access-input" placeholder="LOVE-XXXX" oninput="this.value=this.value.toUpperCase()"/>
+      <input class="login-input" id="access-input" placeholder="123456" type="number" maxlength="6"/>
       <button class="login-btn" onclick="checkCode()">Accéder 💘</button>
       <p style="color:var(--text2);font-size:12px;margin-top:10px">Le code vous est communiqué après validation de votre profil.</p>
     </div>
@@ -325,7 +325,7 @@ async function saveProfile(){
   if(!tiktok){showToast('Le pseudo TikTok est obligatoire ⚠️');return;}
   const h=document.getElementById('f-h').value;
   const w=document.getElementById('f-w').value;
-  const code='LOVE-'+Math.random().toString(36).substr(2,4).toUpperCase();
+  const code=Math.floor(100000+Math.random()*900000).toString();
   const mp={
     ageMin:document.getElementById('f-agemin').value?parseInt(document.getElementById('f-agemin').value):null,
     ageMax:document.getElementById('f-agemax').value?parseInt(document.getElementById('f-agemax').value):null,
