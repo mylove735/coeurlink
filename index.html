@@ -284,6 +284,13 @@ async function checkCode(){
     });
     if(match){
       sessionStorage.setItem('cl','ok');
+      // Save gender of logged in user
+      const allR = data.records||[];
+      const myRecord = allR.find(r=>(r.fields['Code accès']||'').toString().trim()===code.trim());
+      if(myRecord){
+        sessionStorage.setItem('cl_gender', myRecord.fields['Genre']||'');
+        sessionStorage.setItem('cl_name', myRecord.fields['Prénom']||'');
+      }
       showApp();
       err.style.display='none';
     } else {
@@ -407,20 +414,31 @@ function go(t){
 async function loadProfiles(){
   document.getElementById('pg').innerHTML='<div class="es"><p>⏳ Chargement...</p></div>';
   try{
-    const url=`https://api.airtable.com/v0/${AT_BASE}/${AT_TABLE}?filterByFormula={Statut}='✅ Validé'`;
+    const url=`https://api.airtable.com/v0/${AT_BASE}/${AT_TABLE}`;
     const res=await fetch(url,{headers:{'Authorization':'Bearer '+AT_KEY}});
     const data=await res.json();
-    P=(data.records||[]).map(r=>{
+    const allProfiles=(data.records||[]).map(r=>{
       const f=r.fields;
       const mp={};
       (f['Critères matching']||'').split(' | ').forEach(s=>{const[k,v]=s.split(':');if(k&&v)mp[k.trim()]=v.trim();});
       return{id:r.id,name:f['Prénom']||'',age:f['Âge']||0,gender:f['Genre']||'',looking:f['Recherche']||'',
+        statut:f['Statut']||'',
         nat:f['Nationalité']||'',status:f['Statut marital']||'',religion:f['Religion']||'',
         seeking:f['Profil recherché']||'',country:f['Pays de résidence']||'',city:f['Ville de résidence']||'',
         job:f['Profession']||'',height:f['Taille (cm)']||null,weight:f['Poids (kg)']||null,
         bio:f['Bio']||'',tiktok:f['TikTok Contact']||'',
         interests:(f["Centres d'intérêt"]||'').split(', ').filter(Boolean),mp};
-    });
+    }).filter(p => p.statut.includes('Valid'));
+
+    // Filtrer selon le genre du profil connecté
+    const myGender = sessionStorage.getItem('cl_gender') || '';
+    if(myGender === 'Femme'){
+      P = allProfiles.filter(p => p.gender === 'Homme');
+    } else if(myGender === 'Homme'){
+      P = allProfiles.filter(p => p.gender === 'Femme');
+    } else {
+      P = allProfiles;
+    }
     renderProfiles();
   }catch(e){document.getElementById('pg').innerHTML='<div class="es"><p>Erreur de chargement.</p></div>';}
 }
