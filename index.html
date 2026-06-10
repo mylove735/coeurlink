@@ -240,7 +240,7 @@
         <button class="bm" onclick="runMatch()">🔍 Trouver mes doubles</button>
       </div>
       <div id="spc-card"></div>
-      <div id="mr"></div>
+      <div id="mr" class="pg" style="margin-top:1rem"></div>
     </div>
 
   </div>
@@ -536,19 +536,27 @@ function renderMatch(p,i,tgt){
   if(tgt.religion&&p.religion&&tgt.religion===p.religion)pts.push('🕊️ Même religion');
   if(tgt.nat&&p.nat&&tgt.nat===p.nat)pts.push('🏳️ Même nationalité');
   if(tgt.seeking&&p.seeking&&tgt.seeking===p.seeking)pts.push('🎯 Même objectif');
-  return`<div class="mrc${p.score>=60?' top-match':''}">
-    <div class="av" style="background:${c.bg};color:${c.t};width:44px;height:44px;font-size:15px;flex-shrink:0">${ini(p.name)}</div>
-    <div class="mif">
-      <div class="mn">${p.name}, ${p.age} ans · 📍 ${p.city||'—'}</div>
-      <div class="md">${p.gender}${p.job?' · '+p.job:''}${p.religion?' · 🕊️ '+p.religion:''}</div>
-      ${p.tiktok?`<div class="md">🎵 @${p.tiktok}</div>`:''}
-      ${cm.length?`<div class="msp">${cm.slice(0,4).map(x=>`<span class="ci-tag">${x}</span>`).join('')}</div>`:''}
-      ${pts.length?`<div class="msp">${pts.map(x=>`<span class="mpp">${x}</span>`).join('')}</div>`:''}
+  const sb=p.status?`<span class="sb2 ${SC[p.status]||'sc'}">${SL[p.status]||p.status}</span>`:'';
+  const ph=[];if(p.height)ph.push(`📏 ${p.height}cm`);if(p.weight)ph.push(`⚖️ ${p.weight}kg`);
+  const ch=p.interests.slice(0,3).map(x=>`<span class="mc">${x}</span>`).join('');
+  const ex=p.interests.length>3?`<span class="mc">+${p.interests.length-3}</span>`:'';
+  return`<div class="pc${p.score>=60?' top-match':''}">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+      <div class="av" style="background:${c.bg};color:${c.t};margin-bottom:0">${ini(p.name)}</div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+        <span class="mscore ${cls}" style="font-size:18px;font-weight:700;">${p.score}%</span>
+        <div class="mbw"><div class="mb" style="width:${p.score}%"></div></div>
+      </div>
     </div>
-    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0">
-      <span class="mscore ${cls}">${p.score}%</span>
-      <div class="mbw"><div class="mb" style="width:${p.score}%"></div></div>
-    </div>
+    <div class="pn">${p.name}, ${p.age} ans</div>
+    <div class="pm">${p.gender} · 📍 ${p.city||'—'}${p.country?' · '+p.country:''}</div>
+    <div class="pm">${p.job||''}</div>
+    <div class="pm">${p.religion?'🕊️ '+p.religion:''}</div>
+    <div class="pm">${p.tiktok?'🎵 @'+p.tiktok:''}</div>
+    <div class="ptags">${sb}${p.nat?`<span class="mc">${p.nat}</span>`:''}${ph.map(x=>`<span class="mc">${x}</span>`).join('')}</div>
+    <div class="pint">${ch}${ex}</div>
+    ${cm.length?`<div class="pint" style="margin-top:6px">${cm.map(x=>`<span class="ci-tag">${x}</span>`).join('')}</div>`:''}
+    ${pts.length?`<div class="pint" style="margin-top:4px">${pts.map(x=>`<span class="mpp">${x}</span>`).join('')}</div>`:''}
   </div>`;
 }
 
