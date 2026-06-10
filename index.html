@@ -1,901 +1,502 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CoeurLink — Profils Célibataires</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
-    :root {
-      --bg: #f7f4f2;
-      --bg2: #ffffff;
-      --bg3: #f0ece9;
-      --text: #1a1a1a;
-      --text2: #6b6b6b;
-      --border: #e0d9d4;
-      --pink: #D4537E;
-      --pink-light: #FBEAF0;
-      --radius: 12px;
-      --radius-sm: 8px;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-
-    /* HEADER */
-    .header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; height: 58px; position: sticky; top: 0; z-index: 100; }
-    .logo { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--text); }
-    .logo span { color: var(--pink); }
-    .tabs { display: flex; gap: 6px; }
-    .tab { padding: 7px 16px; border-radius: 20px; border: 1px solid var(--border); font-size: 13px; cursor: pointer; background: transparent; color: var(--text2); font-family: 'DM Sans', sans-serif; transition: all .2s; }
-    .tab.active { background: var(--pink); color: white; border-color: var(--pink); }
-    .tab:hover:not(.active) { background: var(--bg3); }
-
-    /* LAYOUT */
-    .main { max-width: 640px; margin: 0 auto; padding: 2rem 1.5rem; }
-    .section { display: none; }
-    .section.active { display: block; }
-
-    /* FORM CARD */
-    .form-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.75rem; }
-    .form-title { font-family: 'Playfair Display', serif; font-size: 20px; margin-bottom: 1.5rem; }
-    .fsl { font-size: 10.5px; font-weight: 600; letter-spacing: .07em; color: var(--text2); text-transform: uppercase; margin: 1.25rem 0 .65rem; border-top: 1px solid var(--border); padding-top: 1.1rem; }
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .fg { display: flex; flex-direction: column; gap: 5px; }
-    .fg.full { grid-column: 1 / -1; }
-    label { font-size: 12px; color: var(--text2); font-weight: 500; }
-    input, select, textarea {
-      font-family: 'DM Sans', sans-serif; font-size: 14px; padding: 9px 12px;
-      border-radius: var(--radius-sm); border: 1px solid var(--border);
-      background: var(--bg3); color: var(--text); width: 100%;
-      transition: border-color .2s;
-    }
-    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--pink); }
-    textarea { resize: none; height: 68px; }
-    .iu { position: relative; }
-    .iu input { padding-right: 40px; }
-    .ul { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 12px; color: var(--text2); pointer-events: none; font-weight: 500; }
-
-    /* ACCORDION */
-    .acc { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
-    .acc-hdr { display: flex; align-items: center; gap: 10px; padding: 12px 14px; cursor: pointer; background: var(--bg3); user-select: none; transition: background .15s; }
-    .acc-hdr:hover { background: #e8e2de; }
-    .acc-title { font-size: 13px; font-weight: 500; flex: 1; }
-    .acc-badge { font-size: 11px; padding: 2px 9px; border-radius: 10px; background: var(--pink-light); color: var(--pink); font-weight: 600; border: 1px solid var(--pink); display: none; }
-    .acc-badge.on { display: inline-block; }
-    .acc-chev { font-size: 14px; color: var(--text2); transition: transform .22s; flex-shrink: 0; }
-    .acc-hdr.open .acc-chev { transform: rotate(180deg); }
-    .acc-body { display: none; border-top: 1px solid var(--border); }
-    .acc-body.open { display: block; }
-
-    /* NET ROWS */
-    .nr { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--border); background: var(--bg2); }
-    .nr:last-child { border-bottom: none; }
-    .nr.hi { background: var(--pink-light); }
-    .ni { font-size: 18px; flex-shrink: 0; width: 26px; text-align: center; }
-    .nn { font-size: 13px; font-weight: 500; min-width: 95px; }
-    .rg { display: flex; gap: 5px; flex-shrink: 0; }
-    .rb { padding: 4px 14px; border-radius: 12px; border: 1px solid var(--border); font-size: 12px; cursor: pointer; background: var(--bg3); color: var(--text2); font-family: 'DM Sans', sans-serif; transition: all .15s; }
-    .rb.yes.on { background: var(--pink); color: white; border-color: var(--pink); }
-    .pw { display: flex; align-items: center; gap: 6px; flex: 1; opacity: 0; pointer-events: none; }
-    .pw.show { opacity: 1; pointer-events: all; }
-    .pat { font-size: 13px; color: var(--pink); font-weight: 600; }
-    .pi { font-family: 'DM Sans', sans-serif; font-size: 13px; padding: 5px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg2); color: var(--text); flex: 1; min-width: 0; }
-    .pi:focus { outline: none; border-color: var(--pink); }
-
-    /* CHIPS */
-    .chips-wrap { padding: 14px; }
-    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-    .chip { padding: 7px 14px; border-radius: 14px; border: 1px solid var(--border); font-size: 13px; cursor: pointer; background: var(--bg2); color: var(--text2); transition: all .15s; user-select: none; }
-    .chip.sel { background: var(--pink-light); border-color: var(--pink); color: var(--pink); }
-    .chip:hover:not(.sel) { background: var(--bg3); }
-
-    /* SUBMIT */
-    .btn-submit { margin-top: 1.25rem; width: 100%; padding: 12px; background: var(--pink); color: white; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: opacity .2s; letter-spacing: .02em; }
-    .btn-submit:hover { opacity: .88; }
-
-    /* STATUS BADGES */
-    .sb2 { display: inline-flex; align-items: center; font-size: 11px; padding: 3px 9px; border-radius: 10px; font-weight: 500; }
-    .sc { background: #E1F5EE; color: #0F6E56; }
-    .sd { background: #FAEEDA; color: #BA7517; }
-    .ss { background: var(--pink-light); color: var(--pink); }
-    .sv { background: #F1EFE8; color: #5F5E5A; }
-
-    /* PROFILES */
-    .ph { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
-    .pt { font-family: 'Playfair Display', serif; font-size: 20px; }
-    .cb { background: var(--pink-light); color: var(--pink); font-size: 12px; padding: 4px 12px; border-radius: 12px; font-weight: 500; }
-    .pg { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
-    .pc { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.2rem; }
-    .av { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; margin-bottom: 10px; }
-    .pn { font-weight: 600; font-size: 15px; }
-    .pm { font-size: 12px; color: var(--text2); margin-top: 3px; }
-    .ptags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
-    .mc { padding: 3px 8px; border-radius: 10px; font-size: 11px; background: var(--bg3); color: var(--text2); }
-    .pint { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
-    .psoc { margin-top: 10px; border-top: 1px solid var(--border); padding-top: 9px; display: flex; flex-direction: column; gap: 5px; }
-    .st { display: flex; align-items: center; gap: 6px; font-size: 12px; }
-    .stn { color: var(--text2); min-width: 76px; }
-    .stp { color: #185FA5; font-weight: 500; }
-    .stz { color: var(--text2); font-style: italic; }
-    .es { text-align: center; padding: 3.5rem 1rem; color: var(--text2); }
-    .es i { font-size: 42px; display: block; margin-bottom: 10px; color: var(--pink); opacity: .4; }
-
-    /* MATCH */
-    .mi { font-size: 14px; color: var(--text2); line-height: 1.65; margin-bottom: 1.25rem; }
-    .mc2 { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 1.25rem; }
-    .mc2 select { width: auto; flex: 1; min-width: 150px; }
-    .bm { padding: 10px 22px; background: var(--pink); color: white; border: none; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; white-space: nowrap; }
-    .bm:hover { opacity: .88; }
-    .mrc { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.3rem; display: flex; align-items: center; gap: 13px; margin-bottom: 12px; }
-    .mscore { font-size: 21px; font-weight: 700; min-width: 46px; text-align: center; }
-    .mscore.h { color: var(--pink); }
-    .mscore.m { color: #BA7517; }
-    .mscore.l { color: var(--text2); }
-    .mif { flex: 1; min-width: 0; }
-    .mn { font-weight: 600; font-size: 14px; }
-    .md { font-size: 12px; color: var(--text2); margin-top: 3px; }
-    .mbw { width: 76px; height: 6px; background: var(--bg3); border-radius: 3px; overflow: hidden; flex-shrink: 0; }
-    .mb { height: 100%; border-radius: 3px; background: var(--pink); }
-    .msp { margin-top: 7px; display: flex; flex-wrap: wrap; gap: 5px; }
-    .mpp { font-size: 11px; padding: 3px 9px; border-radius: 10px; background: var(--bg3); color: var(--text2); }
-
-    /* TOAST */
-    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--pink); color: white; padding: 11px 22px; border-radius: 22px; font-size: 13px; font-family: 'DM Sans', sans-serif; opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 999; white-space: nowrap; box-shadow: 0 4px 16px rgba(212,83,126,.35); }
-    .toast.show { opacity: 1; }
-
-    /* MATCH TOP */
-    .match-top { display:flex; align-items:flex-end; gap:10px; margin-bottom:1.25rem; flex-wrap:wrap; }
-    .match-select-wrap { display:flex; flex-direction:column; gap:5px; flex:1; min-width:180px; }
-    .match-label { font-size:12px; color:var(--text2); font-weight:500; }
-
-    /* SELECTED PROFILE CARD */
-    .selected-profile-card { background:var(--pink-light); border:1.5px solid var(--pink); border-radius:var(--radius); padding:1rem 1.2rem; margin-bottom:1.25rem; display:flex; align-items:center; gap:14px; }
-    .spc-av { width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:700; flex-shrink:0; }
-    .spc-info { flex:1; }
-    .spc-name { font-weight:700; font-size:16px; color:var(--pink); }
-    .spc-meta { font-size:12px; color:var(--text2); margin-top:3px; }
-    .spc-tags { display:flex; flex-wrap:wrap; gap:5px; margin-top:7px; }
-    .spc-tag { font-size:11px; padding:3px 9px; border-radius:10px; background:white; color:var(--pink); border:1px solid var(--pink); }
-
-    /* MATCH RESULT CARDS */
-    .match-section-title { font-size:12px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--text2); margin:1.25rem 0 .75rem; display:flex; align-items:center; gap:8px; }
-    .match-section-title::after { content:''; flex:1; height:1px; background:var(--border); }
-    .mrc { background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius); padding:1rem 1.2rem; display:flex; align-items:center; gap:12px; margin-bottom:10px; transition:border-color .2s; }
-    .mrc:hover { border-color:var(--pink); }
-    .mrc.top-match { border:1.5px solid var(--pink); background:var(--pink-light); }
-    .match-rank { font-size:18px; flex-shrink:0; width:28px; text-align:center; }
-    .mscore { font-size:20px; font-weight:700; min-width:46px; text-align:center; }
-    .mscore.h { color:var(--pink); }
-    .mscore.m { color:#BA7517; }
-    .mscore.l { color:var(--text2); }
-    .mif { flex:1; min-width:0; }
-    .mn { font-weight:600; font-size:14px; }
-    .md { font-size:12px; color:var(--text2); margin-top:3px; }
-    .mbw { width:76px; height:6px; background:var(--bg3); border-radius:3px; overflow:hidden; flex-shrink:0; }
-    .mb { height:100%; border-radius:3px; background:var(--pink); }
-    .msp { margin-top:7px; display:flex; flex-wrap:wrap; gap:5px; }
-    .mpp { font-size:11px; padding:3px 9px; border-radius:10px; background:var(--bg3); color:var(--text2); }
-    .common-interests { margin-top:6px; display:flex; flex-wrap:wrap; gap:5px; }
-    .ci-tag { font-size:11px; padding:3px 9px; border-radius:10px; background:#E1F5EE; color:#0F6E56; }
-    .no-match { text-align:center; padding:2.5rem 1rem; color:var(--text2); }
-    .no-match i { font-size:36px; display:block; margin-bottom:10px; opacity:.3; }
-    .compatibility-bar { display:flex; align-items:center; gap:8px; margin-top:6px; }
-    .compat-label { font-size:11px; color:var(--text2); min-width:80px; }
-    .compat-track { flex:1; height:4px; background:var(--bg3); border-radius:2px; overflow:hidden; }
-    .compat-fill { height:100%; border-radius:2px; background:var(--pink); }
-
-    @media (max-width: 520px) {
-      .form-grid { grid-template-columns: 1fr; }
-      .fg.full { grid-column: 1; }
-      .header { padding: 0 1rem; }
-      .main { padding: 1.25rem 1rem; }
-      .tabs .tab { padding: 6px 10px; font-size: 12px; }
-    }
+    :root{--bg:#f7f4f2;--bg2:#ffffff;--bg3:#f0ece9;--text:#1a1a1a;--text2:#6b6b6b;--border:#e0d9d4;--pink:#D4537E;--pink-light:#FBEAF0;--radius:12px;--radius-sm:8px;}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+    .header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:58px;position:sticky;top:0;z-index:100;}
+    .logo{font-family:'Playfair Display',serif;font-size:22px;}
+    .logo span{color:var(--pink);}
+    .tabs{display:flex;gap:6px;}
+    .tab{padding:7px 16px;border-radius:20px;border:1px solid var(--border);font-size:13px;cursor:pointer;background:transparent;color:var(--text2);font-family:'DM Sans',sans-serif;transition:all .2s;}
+    .tab.active{background:var(--pink);color:white;border-color:var(--pink);}
+    .main{max-width:640px;margin:0 auto;padding:2rem 1.5rem;}
+    .section{display:none;}.section.active{display:block;}
+    .form-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.75rem;}
+    .form-title{font-family:'Playfair Display',serif;font-size:20px;margin-bottom:1.5rem;}
+    .fsl{font-size:10.5px;font-weight:600;letter-spacing:.07em;color:var(--text2);text-transform:uppercase;margin:1.25rem 0 .65rem;border-top:1px solid var(--border);padding-top:1.1rem;}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .fg{display:flex;flex-direction:column;gap:5px;}
+    .fg.full{grid-column:1/-1;}
+    label{font-size:12px;color:var(--text2);font-weight:500;}
+    input,select,textarea{font-family:'DM Sans',sans-serif;font-size:14px;padding:9px 12px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg3);color:var(--text);width:100%;transition:border-color .2s;}
+    input:focus,select:focus,textarea:focus{outline:none;border-color:var(--pink);}
+    textarea{resize:none;height:68px;}
+    .iu{position:relative;}.iu input{padding-right:40px;}
+    .ul{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--text2);pointer-events:none;font-weight:500;}
+    .acc{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+    .acc-hdr{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;background:var(--bg3);user-select:none;}
+    .acc-title{font-size:13px;font-weight:500;flex:1;}
+    .acc-badge{font-size:11px;padding:2px 9px;border-radius:10px;background:var(--pink-light);color:var(--pink);font-weight:600;border:1px solid var(--pink);display:none;}
+    .acc-badge.on{display:inline-block;}
+    .acc-chev{font-size:14px;color:var(--text2);transition:transform .22s;}
+    .acc-hdr.open .acc-chev{transform:rotate(180deg);}
+    .acc-body{display:none;border-top:1px solid var(--border);}
+    .acc-body.open{display:block;}
+    .chips-wrap{padding:14px;}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;}
+    .chip{padding:6px 14px;border-radius:14px;border:1px solid var(--border);font-size:13px;cursor:pointer;background:var(--bg2);color:var(--text2);transition:all .15s;user-select:none;}
+    .chip.sel{background:var(--pink-light);border-color:var(--pink);color:var(--pink);}
+    .btn-submit{margin-top:1.25rem;width:100%;padding:12px;background:var(--pink);color:white;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;}
+    .sb2{display:inline-flex;align-items:center;font-size:11px;padding:3px 9px;border-radius:10px;font-weight:500;}
+    .sc{background:#E1F5EE;color:#0F6E56;}.sd{background:#FAEEDA;color:#BA7517;}.ss{background:var(--pink-light);color:var(--pink);}.sv{background:#F1EFE8;color:#5F5E5A;}
+    .ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;}
+    .pt{font-family:'Playfair Display',serif;font-size:20px;}
+    .cb{background:var(--pink-light);color:var(--pink);font-size:12px;padding:4px 12px;border-radius:12px;font-weight:500;}
+    .pg{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;}
+    .pc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem;}
+    .av{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;margin-bottom:10px;}
+    .pn{font-weight:600;font-size:15px;}.pm{font-size:12px;color:var(--text2);margin-top:3px;}
+    .ptags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
+    .mc{padding:3px 8px;border-radius:10px;font-size:11px;background:var(--bg3);color:var(--text2);}
+    .pint{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;}
+    .es{text-align:center;padding:3.5rem 1rem;color:var(--text2);}
+    .match-top{display:flex;align-items:flex-end;gap:10px;margin-bottom:1.25rem;flex-wrap:wrap;}
+    .match-label{font-size:12px;color:var(--text2);font-weight:500;}
+    .match-select-wrap{display:flex;flex-direction:column;gap:5px;flex:1;min-width:180px;}
+    .bm{padding:10px 22px;background:var(--pink);color:white;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;}
+    .mrc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.2rem;display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+    .mrc.top-match{border:1.5px solid var(--pink);background:var(--pink-light);}
+    .mscore{font-size:20px;font-weight:700;min-width:46px;text-align:center;}
+    .mscore.h{color:var(--pink);}.mscore.m{color:#BA7517;}.mscore.l{color:var(--text2);}
+    .mif{flex:1;min-width:0;}.mn{font-weight:600;font-size:14px;}.md{font-size:12px;color:var(--text2);margin-top:3px;}
+    .mbw{width:76px;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;flex-shrink:0;}
+    .mb{height:100%;border-radius:3px;background:var(--pink);}
+    .msp{margin-top:7px;display:flex;flex-wrap:wrap;gap:5px;}
+    .mpp{font-size:11px;padding:3px 9px;border-radius:10px;background:var(--bg3);color:var(--text2);}
+    .ci-tag{font-size:11px;padding:3px 9px;border-radius:10px;background:#E1F5EE;color:#0F6E56;}
+    .match-section-title{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text2);margin:1.25rem 0 .75rem;display:flex;align-items:center;gap:8px;}
+    .match-section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+    .no-match{text-align:center;padding:2.5rem 1rem;color:var(--text2);}
+    .spc-card{background:var(--pink-light);border:1.5px solid var(--pink);border-radius:var(--radius);padding:1rem 1.2rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:14px;}
+    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--pink);color:white;padding:11px 22px;border-radius:22px;font-size:13px;font-family:'DM Sans',sans-serif;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;white-space:nowrap;box-shadow:0 4px 16px rgba(212,83,126,.35);}
+    .toast.show{opacity:1;}
+    /* LOGIN */
+    .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem;background:var(--bg);}
+    .login-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;max-width:400px;width:100%;text-align:center;}
+    .login-logo{font-family:'Playfair Display',serif;font-size:28px;margin-bottom:8px;}
+    .login-tabs{display:flex;gap:8px;margin-bottom:1.25rem;}
+    .ltab{flex:1;padding:8px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;}
+    .ltab.active{background:var(--pink);color:white;border-color:var(--pink);}
+    .login-input{width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);font-size:14px;font-family:'DM Sans',sans-serif;text-align:center;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;}
+    .login-btn{width:100%;padding:11px;background:var(--pink);color:white;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;}
+    .login-err{color:var(--pink);font-size:13px;margin-top:10px;display:none;}
+    @media(max-width:520px){.form-grid{grid-template-columns:1fr;}.fg.full{grid-column:1;}.header{padding:0 1rem;}.main{padding:1.25rem 1rem;}}
   </style>
 </head>
 <body>
 
-<!-- ECRAN DE CONNEXION -->
-<div id="login-screen" style="min-height:100vh;background:var(--bg);align-items:center;justify-content:center;padding:1.5rem;display:none;">
-  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;max-width:400px;width:100%;text-align:center;">
-    <div style="font-family:'Playfair Display',serif;font-size:28px;margin-bottom:8px;">coeur<span style="color:#D4537E;">link</span></div>
-    <p style="color:var(--text2);font-size:14px;margin-bottom:1.5rem;">Entrez votre code d'accès pour accéder aux profils</p>
-    <div id="login-tabs" style="display:flex;gap:8px;margin-bottom:1.25rem;">
-      <button onclick="showLoginTab('code')" id="tab-code" style="flex:1;padding:8px;border-radius:20px;border:1px solid #D4537E;background:#D4537E;color:white;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;">🔐 J'ai un code</button>
-      <button onclick="showLoginTab('register')" id="tab-register" style="flex:1;padding:8px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;">📝 M'inscrire</button>
+<!-- LOGIN -->
+<div class="login-wrap" id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">coeur<span style="color:var(--pink)">link</span></div>
+    <p style="color:var(--text2);font-size:14px;margin-bottom:1.5rem">Plateforme de rencontres sérieuses</p>
+    <div class="login-tabs">
+      <button class="ltab active" onclick="loginTab('code')">🔐 J'ai un code</button>
+      <button class="ltab" onclick="loginTab('new')">📝 M'inscrire</button>
     </div>
-    <!-- Code access -->
-    <div id="login-code-panel">
-      <input id="access-code-input" type="text" placeholder="Votre code d'accès (ex: LOVE-1234)" style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);font-size:14px;font-family:'DM Sans',sans-serif;text-align:center;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;"/>
-      <button onclick="checkAccessCode()" style="width:100%;padding:11px;background:#D4537E;color:white;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">Accéder 💘</button>
-      <p style="color:var(--text2);font-size:12px;margin-top:10px;">Votre code vous a été communiqué après validation de votre profil.</p>
+    <div id="panel-code">
+      <input class="login-input" id="access-input" placeholder="LOVE-XXXX" oninput="this.value=this.value.toUpperCase()"/>
+      <button class="login-btn" onclick="checkCode()">Accéder 💘</button>
+      <p style="color:var(--text2);font-size:12px;margin-top:10px">Le code vous est communiqué après validation de votre profil.</p>
     </div>
-    <!-- Register panel -->
-    <div id="login-register-panel" style="display:none;">
-      <p style="color:var(--text2);font-size:13px;margin-bottom:12px;">Créez votre profil pour rejoindre CoeurLink. Après validation, vous recevrez votre code d'accès.</p>
-      <button onclick="goToRegister()" style="width:100%;padding:11px;background:#D4537E;color:white;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">Créer mon profil 💌</button>
+    <div id="panel-new" style="display:none">
+      <p style="color:var(--text2);font-size:13px;margin-bottom:12px">Créez votre profil. Après validation vous recevrez votre code d'accès.</p>
+      <button class="login-btn" onclick="goRegister()">Créer mon profil 💌</button>
     </div>
-    <div id="login-error" style="color:#D4537E;font-size:13px;margin-top:10px;display:none;">Code incorrect. Vérifiez votre code d'accès.</div>
+    <div class="login-err" id="login-err">Code incorrect ou profil non validé.</div>
   </div>
 </div>
 
-<div id="main-app" style="display:none;">
-<div class="header">
-  <div class="logo">coeur<span>link</span></div>
-  <div class="tabs">
-    <button class="tab active" onclick="go('register')"><i class="ti ti-user-plus"></i> Créer</button>
-    <button class="tab" onclick="go('profiles')"><i class="ti ti-users"></i> Profils</button>
-    <button class="tab" onclick="go('match')"><i class="ti ti-heart"></i> Matches</button>
+<!-- APP -->
+<div id="app" style="display:none">
+  <div class="header">
+    <div class="logo">coeur<span>link</span></div>
+    <div class="tabs">
+      <button class="tab active" onclick="go('register')">✏️ Créer</button>
+      <button class="tab" onclick="go('profiles')">👥 Profils</button>
+      <button class="tab" onclick="go('match')">💘 Matches</button>
+      <button class="tab" onclick="logout()" style="font-size:12px">🚪</button>
+    </div>
   </div>
-</div>
+  <div class="main">
 
-<div class="main">
+    <!-- CRÉER -->
+    <div class="section active" id="sec-register">
+      <div class="form-card">
+        <div class="form-title">Nouveau profil célibataire 💌</div>
+        <div class="fsl">Informations personnelles</div>
+        <div class="form-grid">
+          <div class="fg"><label>Prénom *</label><input id="f-name" placeholder="Sophie"/></div>
+          <div class="fg"><label>Âge *</label><input id="f-age" type="number" placeholder="28" min="18" max="80"/></div>
+          <div class="fg"><label>Genre *</label><select id="f-gender"><option value="">Choisir...</option><option>Femme</option><option>Homme</option><option>Autre</option></select></div>
+          <div class="fg"><label>Recherche *</label><select id="f-looking"><option value="">Choisir...</option><option>Femme</option><option>Homme</option><option>Tous</option></select></div>
+          <div class="fg"><label>Nationalité</label>
+            <select id="f-nat"><option value="">Choisir...</option><option>🇫🇷 Française</option><option>🇧🇪 Belge</option><option>🇨🇭 Suisse</option><option>🇨🇦 Canadienne</option><option>🇩🇿 Algérienne</option><option>🇲🇦 Marocaine</option><option>🇹🇳 Tunisienne</option><option>🇸🇳 Sénégalaise</option><option>🇨🇮 Ivoirienne</option><option>🇨🇲 Camerounaise</option><option>🇧🇯 Béninoise</option><option>🇲🇱 Malienne</option><option>🇬🇧 Britannique</option><option>🇩🇪 Allemande</option><option>🇪🇸 Espagnole</option><option>🇮🇹 Italienne</option><option>🇵🇹 Portugaise</option><option>🇺🇸 Américaine</option><option>🇧🇷 Brésilienne</option><option>🌍 Autre</option></select>
+          </div>
+          <div class="fg"><label>Statut marital</label>
+            <select id="f-status"><option value="">Choisir...</option><option value="celibataire">Célibataire</option><option value="divorce">Divorcé(e)</option><option value="separe">Séparé(e)</option><option value="veuf">Veuf/Veuve</option></select>
+          </div>
+          <div class="fg"><label>Religion</label>
+            <select id="f-religion"><option value="">Choisir...</option><option>Islam</option><option>Christianisme</option><option>Catholicisme</option><option>Protestantisme</option><option>Judaïsme</option><option>Bouddhisme</option><option>Hindouisme</option><option>Athée / Agnostique</option><option>Autre</option></select>
+          </div>
+          <div class="fg"><label>Profil recherché</label>
+            <select id="f-seeking"><option value="">Choisir...</option><option>Relation sérieuse</option><option>Mariage</option><option>Amitié</option><option>Relation occasionnelle</option><option>Pas encore décidé(e)</option></select>
+          </div>
+          <div class="fg"><label>Pays de résidence</label>
+            <select id="f-country"><option value="">Choisir...</option><option>🇫🇷 France</option><option>🇧🇪 Belgique</option><option>🇨🇭 Suisse</option><option>🇨🇦 Canada</option><option>🇩🇿 Algérie</option><option>🇲🇦 Maroc</option><option>🇹🇳 Tunisie</option><option>🇸🇳 Sénégal</option><option>🇨🇮 Côte d'Ivoire</option><option>🇨🇲 Cameroun</option><option>🇧🇯 Bénin</option><option>🇲🇱 Mali</option><option>🇬🇧 Royaume-Uni</option><option>🇩🇪 Allemagne</option><option>🇪🇸 Espagne</option><option>🇮🇹 Italie</option><option>🇵🇹 Portugal</option><option>🇺🇸 États-Unis</option><option>🇧🇷 Brésil</option><option>🌍 Autre</option></select>
+          </div>
+          <div class="fg"><label>Ville de résidence</label><input id="f-city" placeholder="Paris"/></div>
+          <div class="fg"><label>Profession</label><input id="f-job" placeholder="Designer"/></div>
+          <div class="fg"><label>Taille</label><div class="iu"><input id="f-h" type="number" placeholder="170" min="100" max="250"/><span class="ul">cm</span></div></div>
+          <div class="fg"><label>Poids</label><div class="iu"><input id="f-w" type="number" placeholder="65" min="30" max="300"/><span class="ul">kg</span></div></div>
+          <div class="fg full"><label>Bio</label><textarea id="f-bio" placeholder="Quelques mots sur moi..."></textarea></div>
+          <div class="fg full"><label>🎵 TikTok pour le premier contact *</label>
+            <div style="position:relative"><span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--pink);font-weight:600;font-size:14px;">@</span><input id="f-tiktok" placeholder="votre_pseudo_tiktok" style="padding-left:30px"/></div>
+          </div>
+        </div>
 
-  <!-- ======== CRÉER ======== -->
-  <div class="section active" id="sec-register">
-    <div class="form-card">
-      <div class="form-title">Nouveau profil célibataire 💌</div>
+        <div class="fsl">Critères de matching</div>
+        <div class="form-grid">
+          <div class="fg"><label>Âge min</label><div class="iu"><input id="f-agemin" type="number" placeholder="18" min="18" max="80"/><span class="ul">ans</span></div></div>
+          <div class="fg"><label>Âge max</label><div class="iu"><input id="f-agemax" type="number" placeholder="50" min="18" max="80"/><span class="ul">ans</span></div></div>
+          <div class="fg"><label>Taille min</label><div class="iu"><input id="f-hmin" type="number" placeholder="150" min="100" max="250"/><span class="ul">cm</span></div></div>
+          <div class="fg"><label>Taille max</label><div class="iu"><input id="f-hmax" type="number" placeholder="200" min="100" max="250"/><span class="ul">cm</span></div></div>
+          <div class="fg"><label>Poids min</label><div class="iu"><input id="f-wmin" type="number" placeholder="40" min="30" max="300"/><span class="ul">kg</span></div></div>
+          <div class="fg"><label>Poids max</label><div class="iu"><input id="f-wmax" type="number" placeholder="100" min="30" max="300"/><span class="ul">kg</span></div></div>
+          <div class="fg"><label>Genre souhaité</label><select id="f-gpref"><option value="">Peu importe</option><option>Femme</option><option>Homme</option><option>Autre</option></select></div>
+          <div class="fg"><label>Statut souhaité</label><select id="f-spref"><option value="">Peu importe</option><option value="celibataire">Célibataire</option><option value="divorce">Divorcé(e)</option><option value="separe">Séparé(e)</option><option value="veuf">Veuf/Veuve</option></select></div>
+          <div class="fg"><label>Religion souhaitée</label><select id="f-rpref"><option value="">Peu importe</option><option>Islam</option><option>Christianisme</option><option>Catholicisme</option><option>Protestantisme</option><option>Judaïsme</option><option>Bouddhisme</option><option>Hindouisme</option><option>Athée / Agnostique</option><option>Autre</option></select></div>
+          <div class="fg"><label>Profil souhaité</label><select id="f-sekpref"><option value="">Peu importe</option><option>Relation sérieuse</option><option>Mariage</option><option>Amitié</option><option>Relation occasionnelle</option></select></div>
+          <div class="fg"><label>Nationalité souhaitée</label><select id="f-natpref"><option value="">Peu importe</option><option>🇫🇷 Française</option><option>🇧🇪 Belge</option><option>🇨🇭 Suisse</option><option>🇩🇿 Algérienne</option><option>🇲🇦 Marocaine</option><option>🇹🇳 Tunisienne</option><option>🇸🇳 Sénégalaise</option><option>🇨🇮 Ivoirienne</option><option>🇨🇲 Camerounaise</option><option>🌍 Autre</option></select></div>
+          <div class="fg"><label>Pays souhaité</label><select id="f-cpref"><option value="">Peu importe</option><option>🇫🇷 France</option><option>🇧🇪 Belgique</option><option>🇨🇭 Suisse</option><option>🇩🇿 Algérie</option><option>🇲🇦 Maroc</option><option>🇹🇳 Tunisie</option><option>🇸🇳 Sénégal</option><option>🇨🇮 Côte d'Ivoire</option><option>🇨🇲 Cameroun</option><option>🌍 Autre</option></select></div>
+          <div class="fg"><label>Ville souhaitée</label><input id="f-citypref" placeholder="Paris"/></div>
+          <div class="fg"><label>Profession souhaitée</label><input id="f-jobpref" placeholder="Ex: Médecin..."/></div>
+        </div>
 
-      <div class="fsl">Informations personnelles</div>
-      <div class="form-grid">
-        <div class="fg"><label>Prénom *</label><input id="f-name" placeholder="Sophie"/></div>
-        <div class="fg"><label>Âge *</label><input id="f-age" type="number" placeholder="28" min="18" max="80"/></div>
-        <div class="fg"><label>Genre *</label>
-          <select id="f-gender"><option value="">Choisir...</option><option>Femme</option><option>Homme</option><option>Autre</option></select>
-        </div>
-        <div class="fg"><label>Recherche *</label>
-          <select id="f-looking"><option value="">Choisir...</option><option>Femme</option><option>Homme</option><option>Tous</option></select>
-        </div>
-        <div class="fg"><label>Nationalité</label>
-          <select id="f-nat">
-            <option value="">Choisir...</option>
-            <option>🇫🇷 Française</option><option>🇧🇪 Belge</option><option>🇨🇭 Suisse</option><option>🇨🇦 Canadienne</option>
-            <option>🇩🇿 Algérienne</option><option>🇲🇦 Marocaine</option><option>🇹🇳 Tunisienne</option><option>🇸🇳 Sénégalaise</option>
-            <option>🇨🇮 Ivoirienne</option><option>🇨🇲 Camerounaise</option><option>🇧🇯 Béninoise</option><option>🇲🇱 Malienne</option>
-            <option>🇬🇧 Britannique</option><option>🇩🇪 Allemande</option><option>🇪🇸 Espagnole</option><option>🇮🇹 Italienne</option>
-            <option>🇵🇹 Portugaise</option><option>🇺🇸 Américaine</option><option>🇧🇷 Brésilienne</option><option>🇯🇵 Japonaise</option>
-            <option>🇨🇳 Chinoise</option><option>🇰🇷 Coréenne</option><option>🇮🇳 Indienne</option><option>🇹🇷 Turque</option>
-            <option>🇷🇺 Russe</option><option>🌍 Autre</option>
-          </select>
-        </div>
-        <div class="fg"><label>Statut marital</label>
-          <select id="f-status">
-            <option value="">Choisir...</option>
-            <option value="celibataire">Célibataire</option>
-            <option value="divorce">Divorcé(e)</option>
-            <option value="separe">Séparé(e)</option>
-            <option value="veuf">Veuf / Veuve</option>
-          </select>
-        </div>
-        <div class="fg"><label>Religion</label>
-          <select id="f-religion">
-            <option value="">Choisir...</option>
-            <option>Islam</option>
-            <option>Christianisme</option>
-            <option>Catholicisme</option>
-            <option>Protestantisme</option>
-            <option>Judaïsme</option>
-            <option>Bouddhisme</option>
-            <option>Hindouisme</option>
-            <option>Athée / Agnostique</option>
-            <option>Autre</option>
-            <option>Non précisé</option>
-          </select>
-        </div>
-        <div class="fg"><label>Profil recherché</label>
-          <select id="f-seeking">
-            <option value="">Choisir...</option>
-            <option>Relation sérieuse</option>
-            <option>Mariage</option>
-            <option>Amitié</option>
-            <option>Relation occasionnelle</option>
-            <option>Pas encore décidé(e)</option>
-          </select>
-        </div>
-        <div class="fg"><label>Pays de résidence</label>
-          <select id="f-country">
-            <option value="">Choisir...</option>
-            <option>🇫🇷 France</option><option>🇧🇪 Belgique</option><option>🇨🇭 Suisse</option><option>🇨🇦 Canada</option>
-            <option>🇩🇿 Algérie</option><option>🇲🇦 Maroc</option><option>🇹🇳 Tunisie</option><option>🇸🇳 Sénégal</option>
-            <option>🇨🇮 Côte d'Ivoire</option><option>🇨🇲 Cameroun</option><option>🇧🇯 Bénin</option><option>🇲🇱 Mali</option>
-            <option>🇬🇳 Guinée</option><option>🇧🇫 Burkina Faso</option><option>🇹🇬 Togo</option><option>🇨🇬 Congo</option>
-            <option>🇬🇧 Royaume-Uni</option><option>🇩🇪 Allemagne</option><option>🇪🇸 Espagne</option><option>🇮🇹 Italie</option>
-            <option>🇵🇹 Portugal</option><option>🇳🇱 Pays-Bas</option><option>🇺🇸 États-Unis</option><option>🇧🇷 Brésil</option>
-            <option>🇲🇽 Mexique</option><option>🇯🇵 Japon</option><option>🇨🇳 Chine</option><option>🇰🇷 Corée du Sud</option>
-            <option>🇮🇳 Inde</option><option>🇹🇷 Turquie</option><option>🇷🇺 Russie</option><option>🌍 Autre</option>
-          </select>
-        </div>
-        <div class="fg"><label>Ville de résidence</label><input id="f-city" placeholder="Paris"/></div>
-        <div class="fg"><label>Profession</label><input id="f-job" placeholder="Designer"/></div>
-        <div class="fg"><label>Taille</label>
-          <div class="iu"><input id="f-h" type="number" placeholder="170" min="100" max="250"/><span class="ul">cm</span></div>
-        </div>
-        <div class="fg"><label>Poids</label>
-          <div class="iu"><input id="f-w" type="number" placeholder="65" min="30" max="300"/><span class="ul">kg</span></div>
-        </div>
-        <div class="fg full"><label>Bio</label><textarea id="f-bio" placeholder="Quelques mots sur moi..."></textarea></div>
-        <div class="fg full"><label>Profil TikTok (pour le premier contact) *</label><div style="position:relative"><span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px;">🎵 @</span><input id="f-phone" type="text" placeholder="votre_pseudo_tiktok" style="padding-left:44px;"/></div></div>
-      </div>
-
-      <div class="fsl">Critères de matching</div>
-      <div class="form-grid">
-        <div class="fg"><label>Âge min recherché</label>
-          <div class="iu"><input id="f-agemin" type="number" placeholder="18" min="18" max="80"/><span class="ul">ans</span></div>
-        </div>
-        <div class="fg"><label>Âge max recherché</label>
-          <div class="iu"><input id="f-agemax" type="number" placeholder="50" min="18" max="80"/><span class="ul">ans</span></div>
-        </div>
-        <div class="fg"><label>Taille min recherchée</label>
-          <div class="iu"><input id="f-heightmin" type="number" placeholder="150" min="100" max="250"/><span class="ul">cm</span></div>
-        </div>
-        <div class="fg"><label>Taille max recherchée</label>
-          <div class="iu"><input id="f-heightmax" type="number" placeholder="200" min="100" max="250"/><span class="ul">cm</span></div>
-        </div>
-        <div class="fg"><label>Poids min recherché</label>
-          <div class="iu"><input id="f-weightmin" type="number" placeholder="40" min="30" max="300"/><span class="ul">kg</span></div>
-        </div>
-        <div class="fg"><label>Poids max recherché</label>
-          <div class="iu"><input id="f-weightmax" type="number" placeholder="100" min="30" max="300"/><span class="ul">kg</span></div>
-        </div>
-        <div class="fg"><label>Genre recherché</label>
-          <select id="f-gender-pref">
-            <option value="">Peu importe</option>
-            <option>Femme</option>
-            <option>Homme</option>
-            <option>Autre</option>
-          </select>
-        </div>
-        <div class="fg"><label>Statut marital souhaité</label>
-          <select id="f-status-pref">
-            <option value="">Peu importe</option>
-            <option value="celibataire">Célibataire</option>
-            <option value="divorce">Divorcé(e)</option>
-            <option value="separe">Séparé(e)</option>
-            <option value="veuf">Veuf / Veuve</option>
-          </select>
-        </div>
-        <div class="fg"><label>Religion souhaitée</label>
-          <select id="f-rel-pref">
-            <option value="">Peu importe</option>
-            <option>Islam</option>
-            <option>Christianisme</option>
-            <option>Catholicisme</option>
-            <option>Protestantisme</option>
-            <option>Judaïsme</option>
-            <option>Bouddhisme</option>
-            <option>Hindouisme</option>
-            <option>Athée / Agnostique</option>
-            <option>Autre</option>
-          </select>
-        </div>
-        <div class="fg"><label>Profil recherché</label>
-          <select id="f-seeking-pref">
-            <option value="">Peu importe</option>
-            <option>Relation sérieuse</option>
-            <option>Mariage</option>
-            <option>Amitié</option>
-            <option>Relation occasionnelle</option>
-            <option>Pas encore décidé(e)</option>
-          </select>
-        </div>
-        <div class="fg"><label>Nationalité souhaitée</label>
-          <select id="f-nat-pref">
-            <option value="">Peu importe</option>
-            <option>🇫🇷 Française</option><option>🇧🇪 Belge</option><option>🇨🇭 Suisse</option><option>🇨🇦 Canadienne</option>
-            <option>🇩🇿 Algérienne</option><option>🇲🇦 Marocaine</option><option>🇹🇳 Tunisienne</option><option>🇸🇳 Sénégalaise</option>
-            <option>🇨🇮 Ivoirienne</option><option>🇨🇲 Camerounaise</option><option>🇧🇯 Béninoise</option><option>🇲🇱 Malienne</option>
-            <option>🇬🇧 Britannique</option><option>🇩🇪 Allemande</option><option>🇪🇸 Espagnole</option><option>🇮🇹 Italienne</option>
-            <option>🇵🇹 Portugaise</option><option>🇺🇸 Américaine</option><option>🇧🇷 Brésilienne</option><option>🌍 Autre</option>
-          </select>
-        </div>
-        <div class="fg"><label>Pays souhaité</label>
-          <select id="f-country-pref">
-            <option value="">Peu importe</option>
-            <option>🇫🇷 France</option><option>🇧🇪 Belgique</option><option>🇨🇭 Suisse</option><option>🇨🇦 Canada</option>
-            <option>🇩🇿 Algérie</option><option>🇲🇦 Maroc</option><option>🇹🇳 Tunisie</option><option>🇸🇳 Sénégal</option>
-            <option>🇨🇮 Côte d'Ivoire</option><option>🇨🇲 Cameroun</option><option>🇬🇧 Royaume-Uni</option>
-            <option>🇩🇪 Allemagne</option><option>🇪🇸 Espagne</option><option>🇮🇹 Italie</option><option>🇺🇸 États-Unis</option>
-            <option>🌍 Autre</option>
-          </select>
-        </div>
-        <div class="fg"><label>Ville souhaitée</label>
-          <input id="f-city-pref" placeholder="Paris"/>
-        </div>
-        <div class="fg"><label>Profession souhaitée</label>
-          <input id="f-job-pref" placeholder="Ex: Médecin, Ingénieur..."/>
-        </div>
-      </div>
-
-      <div class="fsl">Réseaux sociaux</div>
-      <div class="acc">
-        <div class="acc-hdr" id="sh" onclick="togAcc('s')">
-          <i class="ti ti-device-mobile" style="font-size:16px;color:#6b6b6b"></i>
-          <span class="acc-title">Voir / renseigner mes réseaux sociaux</span>
-          <span class="acc-badge" id="s-badge"></span>
-          <i class="ti ti-chevron-down acc-chev"></i>
-        </div>
-        <div class="acc-body" id="s-body"></div>
-      </div>
-
-      <div class="fsl">Centres d'intérêt</div>
-      <div class="acc">
-        <div class="acc-hdr" id="ih" onclick="togAcc('i')">
-          <i class="ti ti-heart" style="font-size:16px;color:#6b6b6b"></i>
-          <span class="acc-title">Choisir mes centres d'intérêt</span>
-          <span class="acc-badge" id="i-badge"></span>
-          <i class="ti ti-chevron-down acc-chev"></i>
-        </div>
-        <div class="acc-body" id="i-body">
-          <div class="chips-wrap">
-            <div class="chips" id="chips">
-              <span class="chip" onclick="tc(this)">Voyages ✈️</span>
-              <span class="chip" onclick="tc(this)">Cuisine 🍳</span>
-              <span class="chip" onclick="tc(this)">Musique 🎵</span>
-              <span class="chip" onclick="tc(this)">Sport 🏃</span>
-              <span class="chip" onclick="tc(this)">Cinéma 🎬</span>
-              <span class="chip" onclick="tc(this)">Lecture 📚</span>
-              <span class="chip" onclick="tc(this)">Art 🎨</span>
-              <span class="chip" onclick="tc(this)">Nature 🌿</span>
-              <span class="chip" onclick="tc(this)">Gaming 🎮</span>
-              <span class="chip" onclick="tc(this)">Yoga 🧘</span>
-              <span class="chip" onclick="tc(this)">Photo 📷</span>
-              <span class="chip" onclick="tc(this)">Tech 💻</span>
-              <span class="chip" onclick="tc(this)">Danse 💃</span>
-              <span class="chip" onclick="tc(this)">Randonnée 🥾</span>
-              <span class="chip" onclick="tc(this)">Mode 👗</span>
-              <span class="chip" onclick="tc(this)">Animaux 🐾</span>
+        <div class="fsl">Centres d'intérêt</div>
+        <div class="acc">
+          <div class="acc-hdr" id="ih" onclick="togI()">
+            <i class="ti ti-heart" style="font-size:16px;color:var(--text2)"></i>
+            <span class="acc-title">Choisir mes centres d'intérêt</span>
+            <span class="acc-badge" id="i-badge"></span>
+            <i class="ti ti-chevron-down acc-chev"></i>
+          </div>
+          <div class="acc-body" id="i-body">
+            <div class="chips-wrap">
+              <div class="chips" id="chips">
+                <span class="chip" onclick="tc(this)">Voyages ✈️</span>
+                <span class="chip" onclick="tc(this)">Cuisine 🍳</span>
+                <span class="chip" onclick="tc(this)">Musique 🎵</span>
+                <span class="chip" onclick="tc(this)">Sport 🏃</span>
+                <span class="chip" onclick="tc(this)">Cinéma 🎬</span>
+                <span class="chip" onclick="tc(this)">Lecture 📚</span>
+                <span class="chip" onclick="tc(this)">Art 🎨</span>
+                <span class="chip" onclick="tc(this)">Nature 🌿</span>
+                <span class="chip" onclick="tc(this)">Gaming 🎮</span>
+                <span class="chip" onclick="tc(this)">Yoga 🧘</span>
+                <span class="chip" onclick="tc(this)">Photo 📷</span>
+                <span class="chip" onclick="tc(this)">Tech 💻</span>
+                <span class="chip" onclick="tc(this)">Danse 💃</span>
+                <span class="chip" onclick="tc(this)">Randonnée 🥾</span>
+                <span class="chip" onclick="tc(this)">Mode 👗</span>
+                <span class="chip" onclick="tc(this)">Animaux 🐾</span>
+              </div>
             </div>
           </div>
         </div>
+
+        <button class="btn-submit" onclick="saveProfile()">Enregistrer le profil 💌</button>
       </div>
-
-      <button class="btn-submit" onclick="save()">Enregistrer le profil 💌</button>
     </div>
-  </div>
 
-  <!-- ======== PROFILS ======== -->
-  <div class="section" id="sec-profiles">
-    <div class="ph">
-      <div class="pt">Profils enregistrés</div>
-      <span class="cb" id="cnt">0 profil</span>
+    <!-- PROFILS -->
+    <div class="section" id="sec-profiles">
+      <div class="ph"><div class="pt">Profils validés</div><span class="cb" id="cnt">0 profil</span></div>
+      <div class="pg" id="pg"><div class="es"><p>Chargement...</p></div></div>
     </div>
-    <div class="pg" id="pg">
-      <div class="es"><i class="ti ti-user-off"></i><p>Aucun profil pour l'instant.<br>Commencez par en créer un !</p></div>
-    </div>
-  </div>
 
-  <!-- ======== MATCH ======== -->
-  <div class="section" id="sec-match">
-    <div class="match-top">
-      <div class="match-select-wrap">
-        <label class="match-label">Choisir un profil</label>
-        <select id="msel"><option value="">— Sélectionner —</option></select>
+    <!-- MATCH -->
+    <div class="section" id="sec-match">
+      <div class="match-top">
+        <div class="match-select-wrap">
+          <label class="match-label">Choisir un profil</label>
+          <select id="msel"><option value="">— Sélectionner —</option></select>
+        </div>
+        <button class="bm" onclick="runMatch()">🔍 Trouver mes doubles</button>
       </div>
-      <button class="bm" onclick="runMatch()">🔍 Trouver mes doubles</button>
+      <div id="spc-card"></div>
+      <div id="mr"></div>
     </div>
 
-    <!-- Résumé du profil sélectionné -->
-    <div id="match-profile-card" style="display:none" class="selected-profile-card"></div>
-
-    <!-- Résultats -->
-    <div id="mr"></div>
   </div>
+</div>
 
-</div><!-- /main -->
-
-</div><!-- /main-app -->
 <div class="toast" id="toast"></div>
 
 <script>
-const NW=[
-  {id:'tiktok',name:'TikTok',icon:'🎵'},
-  {id:'instagram',name:'Instagram',icon:'📸'},
-  {id:'facebook',name:'Facebook',icon:'📘'},
-  {id:'snapchat',name:'Snapchat',icon:'👻'},
-  {id:'twitter',name:'X / Twitter',icon:'🐦'},
-  {id:'linkedin',name:'LinkedIn',icon:'💼'},
-  {id:'youtube',name:'YouTube',icon:'▶️'},
-  {id:'twitch',name:'Twitch',icon:'🎮'},
-  {id:'pinterest',name:'Pinterest',icon:'📌'},
-  {id:'discord',name:'Discord',icon:'💬'},
-  {id:'whatsapp',name:'WhatsApp',icon:'💚'},
-  {id:'telegram',name:'Telegram',icon:'✈️'},
-  {id:'bereal',name:'BeReal',icon:'📷'},
-  {id:'threads',name:'Threads',icon:'🧵'}
-];
+const AT_BASE = 'appbBPn5mpJNW7x4n';
+const AT_TABLE = 'tbliJk7e2g1Gaj6C4';
+const AT_KEY = 'pat4PKB1FTniW1MKg.837b53fbc583c07e2274a55527f0e17b6c806145d1de8b28a17f298e61fddfb1';
 const SL={celibataire:'Célibataire',divorce:'Divorcé(e)',separe:'Séparé(e)',veuf:'Veuf/Veuve'};
 const SC={celibataire:'sc',divorce:'sd',separe:'ss',veuf:'sv'};
-let P=[]; // Profils validés chargés depuis Airtable
-
-  async function loadValidatedProfiles() {
-    try {
-      const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}?filterByFormula={Statut}='✅ Validé'&fields[]=Prénom&fields[]=Âge&fields[]=Genre&fields[]=Recherche&fields[]=Nationalité&fields[]=Statut marital&fields[]=Religion&fields[]=Profil recherché&fields[]=Pays de résidence&fields[]=Ville de résidence&fields[]=Profession&fields[]=Taille (cm)&fields[]=Poids (kg)&fields[]=Bio&fields[]=Centres d'intérêt&fields[]=Réseaux sociaux&fields[]=Critères matching`;
-      const res = await fetch(url, {
-        headers: { 'Authorization': `Bearer ${AIRTABLE_API_KEY}` }
-      });
-      const data = await res.json();
-      P = (data.records||[]).map(r => {
-        const f = r.fields;
-        const socials = {};
-        (f['Réseaux sociaux']||'').split(', ').forEach(s => {
-          const parts = s.split(' : @');
-          if(parts[0]) socials[parts[0]] = parts[1]||null;
-        });
-        const mp = {};
-        (f['Critères matching']||'').split(' | ').forEach(c => {
-          const [k,v] = c.split(': ');
-          if(k==='Age min') mp.ageMin=parseInt(v);
-          if(k==='Age max') mp.ageMax=parseInt(v);
-          if(k==='Religion') mp.religion=v;
-          if(k==='Nationalité') mp.nationality=v;
-          if(k==='Pays') mp.country=v;
-          if(k==='Statut') mp.status=v;
-        });
-        return {
-          id: r.id,
-          name: f['Prénom']||'',
-          age: f['Âge']||0,
-          gender: f['Genre']||'',
-          looking: f['Recherche']||'',
-          nat: f['Nationalité']||'',
-          status: f['Statut marital']||'',
-          religion: f['Religion']||'',
-          seeking: f['Profil recherché']||'',
-          country: f['Pays de résidence']||'',
-          city: f['Ville de résidence']||'',
-          job: f['Profession']||'',
-          height: f['Taille (cm)']||null,
-          weight: f['Poids (kg)']||null,
-          bio: f['Bio']||'',
-          interests: (f["Centres d'intérêt"]||'').split(', ').filter(Boolean),
-          socials,
-          matchPref: mp
-        };
-      });
-    } catch(e) {
-      console.error('Erreur chargement profils:', e);
-      P = [];
-    }
-  }
-
-  // ========== AIRTABLE CONFIG ==========
-  const AIRTABLE_BASE_ID = 'appbBPn5mpJNW7x4n';
-  const AIRTABLE_TABLE_ID = 'tbliJk7e2g1Gaj6C4';
-  const AIRTABLE_API_KEY = 'pat4PKB1FTniW1MKg.837b53fbc583c07e2274a55527f0e17b6c806145d1de8b28a17f298e61fddfb1'; // À remplacer
-
-  async function saveToAirtable(profile) {
-    try {
-      const socials = Object.entries(profile.socials||{}).map(([net,pseudo]) => `${net}${pseudo?' : @'+pseudo:''}`).join(', ');
-      const mp = profile.matchPref || {};
-      const matchCriteria = [
-        mp.ageMin ? `Age min: ${mp.ageMin}` : '',
-        mp.ageMax ? `Age max: ${mp.ageMax}` : '',
-        mp.religion ? `Religion: ${mp.religion}` : '',
-        mp.nationality ? `Nationalité: ${mp.nationality}` : '',
-        mp.country ? `Pays: ${mp.country}` : '',
-        mp.status ? `Statut: ${mp.status}` : '',
-      ].filter(Boolean).join(' | ');
-
-      const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          fields: {
-            'Prénom': profile.name,
-            'Âge': profile.age,
-            'Genre': profile.gender,
-            'Recherche': profile.looking,
-            'Nationalité': profile.nat || '',
-            'Statut marital': profile.status || '',
-            'Religion': profile.religion || '',
-            'Profil recherché': profile.seeking || '',
-            'Pays de résidence': profile.country || '',
-            'Ville de résidence': profile.city || '',
-            'Profession': profile.job || '',
-            'Taille (cm)': profile.height || null,
-            'Poids (kg)': profile.weight || null,
-            'Bio': profile.bio || '',
-            "Centres d'intérêt": profile.interests.join(', '),
-            'Réseaux sociaux': socials,
-            'Critères matching': matchCriteria,
-            'TikTok Contact': profile.phone || '',
-            'Code accès': profile.accessCode || '',
-            'Date inscription': new Date().toISOString(),
-            'Statut': '⏳ En attente'
-          }
-        })
-      });
-      if (!response.ok) console.error('Airtable error:', await response.text());
-    } catch(e) {
-      console.error('Airtable save error:', e);
-    }
-  }
-  // ========================================
-
 const AC=['#FBEAF0/#D4537E','#E1F5EE/#1D9E75','#E6F1FB/#185FA5','#FAEEDA/#BA7517','#EEEDFE/#534AB7','#FAECE7/#993C1D'];
 const gc=i=>{const p=AC[i%AC.length].split('/');return{bg:p[0],t:p[1]};};
 const ini=n=>n.split(' ').map(x=>x[0]).join('').toUpperCase().slice(0,2);
-const save2db=()=>{}; // Profils gérés via Airtable
+let P=[];
 
-function buildNets(){
-  document.getElementById('s-body').innerHTML=NW.map(n=>`
-    <div class="nr" id="nr-${n.id}">
-      <span class="ni">${n.icon}</span>
-      <span class="nn">${n.name}</span>
-      <div class="rg">
-        <button class="rb yes" id="y-${n.id}" onclick="sn('${n.id}',true)">Oui</button>
-        <button class="rb no"  id="no-${n.id}" onclick="sn('${n.id}',false)">Non</button>
-      </div>
-      <div class="pw" id="pw-${n.id}">
-        <span class="pat">@</span>
-        <input class="pi" id="inp-${n.id}" placeholder="${n.name}" oninput="rsc()"/>
-      </div>
-    </div>`).join('');
+// LOGIN
+function loginTab(t){
+  document.getElementById('panel-code').style.display=t==='code'?'block':'none';
+  document.getElementById('panel-new').style.display=t==='new'?'block':'none';
+  document.querySelectorAll('.ltab').forEach((b,i)=>b.classList.toggle('active',['code','new'][i]===t));
 }
+async function checkCode(){
+  const code=document.getElementById('access-input').value.trim().toUpperCase();
+  const err=document.getElementById('login-err');
+  if(!code){err.style.display='block';err.textContent='Entrez votre code.';return;}
+  try{
+    const url=`https://api.airtable.com/v0/${AT_BASE}/${AT_TABLE}?filterByFormula=AND({Code accès}='${code}',{Statut}='✅ Validé')`;
+    const res=await fetch(url,{headers:{'Authorization':'Bearer '+AT_KEY}});
+    const data=await res.json();
+    if(data.records&&data.records.length>0){
+      sessionStorage.setItem('cl','ok');
+      showApp();
+    } else {
+      err.style.display='block';
+      err.textContent='Code incorrect ou profil non encore validé.';
+    }
+  }catch(e){err.style.display='block';err.textContent='Erreur. Réessayez.';}
+}
+function goRegister(){
+  sessionStorage.setItem('cl','guest');
+  showApp();
+  go('register');
+}
+function showApp(){
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app').style.display='block';
+}
+function logout(){
+  sessionStorage.removeItem('cl');
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('app').style.display='none';
+}
+// Init
+if(sessionStorage.getItem('cl')){showApp();}
 
-function togAcc(k){
-  const h=document.getElementById(k+'h'),b=document.getElementById(k+'-body');
-  const o=h.classList.toggle('open');
-  b.classList.toggle('open',o);
+// INTERESTS
+function togI(){
+  const h=document.getElementById('ih'),b=document.getElementById('i-body');
+  const o=h.classList.toggle('open');b.classList.toggle('open',o);
 }
-
-function sn(id,y){
-  document.getElementById('y-'+id).classList.toggle('on',y);
-  document.getElementById('no-'+id).classList.toggle('on',!y);
-  document.getElementById('nr-'+id).classList.toggle('hi',y);
-  document.getElementById('pw-'+id).classList.toggle('show',y);
-  if(!y)document.getElementById('inp-'+id).value='';
-  if(y)setTimeout(()=>document.getElementById('inp-'+id).focus(),30);
-  rsc();
-}
-function rsc(){
-  const n=NW.filter(x=>document.getElementById('y-'+x.id).classList.contains('on')).length;
-  const e=document.getElementById('s-badge');
-  if(n){e.textContent=n+' réseau'+(n>1?'x':'');e.classList.add('on');}
-  else e.classList.remove('on');
-}
-function gs(){
-  const r={};
-  NW.forEach(n=>{if(document.getElementById('y-'+n.id).classList.contains('on'))r[n.id]=document.getElementById('inp-'+n.id).value.trim().replace(/^@/,'')||null;});
-  return r;
-}
-function rs(){
-  NW.forEach(n=>{
-    document.getElementById('y-'+n.id).classList.remove('on');
-    document.getElementById('no-'+n.id).classList.remove('on');
-    document.getElementById('nr-'+n.id).classList.remove('hi');
-    document.getElementById('pw-'+n.id).classList.remove('show');
-    document.getElementById('inp-'+n.id).value='';
-  });
-  document.getElementById('s-badge').classList.remove('on');
-  document.getElementById('sh').classList.remove('open');
-  document.getElementById('s-body').classList.remove('open');
-}
-
 function tc(el){
   el.classList.toggle('sel');
   const n=document.querySelectorAll('#chips .chip.sel').length;
   const e=document.getElementById('i-badge');
-  if(n){e.textContent=n+' choix';e.classList.add('on');}
-  else e.classList.remove('on');
+  if(n){e.textContent=n+' choix';e.classList.add('on');}else e.classList.remove('on');
 }
 function gch(){return[...document.querySelectorAll('#chips .chip.sel')].map(c=>c.textContent.trim());}
-function rch(){
-  document.querySelectorAll('#chips .chip.sel').forEach(c=>c.classList.remove('sel'));
-  document.getElementById('i-badge').classList.remove('on');
-  document.getElementById('ih').classList.remove('open');
-  document.getElementById('i-body').classList.remove('open');
-}
+function rch(){document.querySelectorAll('#chips .chip.sel').forEach(c=>c.classList.remove('sel'));document.getElementById('i-badge').classList.remove('on');document.getElementById('ih').classList.remove('open');document.getElementById('i-body').classList.remove('open');}
 
-async function go(t){
-  document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('active',['register','profiles','match'][i]===t));
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  document.getElementById('sec-'+t).classList.add('active');
-  if(t==='profiles'){
-    document.getElementById('pg').innerHTML='<div class="es"><i class="ti ti-loader"></i><p>Chargement des profils validés...</p></div>';
-    await loadValidatedProfiles();
-    rp();
-  }
-  if(t==='match'){
-    await loadValidatedProfiles();
-    pms();
-  }
-}
-
-function save(){
+// SAVE PROFILE
+async function saveProfile(){
   const name=document.getElementById('f-name').value.trim();
   const age=parseInt(document.getElementById('f-age').value);
   const gender=document.getElementById('f-gender').value;
   const looking=document.getElementById('f-looking').value;
+  const tiktok=document.getElementById('f-tiktok').value.trim().replace(/^@/,'');
   if(!name||!age||!gender||!looking){showToast('Remplissez les champs obligatoires ⚠️');return;}
   if(age<18||age>80){showToast('Âge invalide ⚠️');return;}
-  const h=document.getElementById('f-h').value,w=document.getElementById('f-w').value;
-  if(h&&(h<100||h>250)){showToast('Taille invalide ⚠️');return;}
-  if(w&&(w<30||w>300)){showToast('Poids invalide ⚠️');return;}
-  P.push({id:Date.now(),name,age,gender,looking,
-    nat:document.getElementById('f-nat').value,
-    status:document.getElementById('f-status').value,
-    religion:document.getElementById('f-religion').value,
-    seeking:document.getElementById('f-seeking').value,
-    country:document.getElementById('f-country').value,
-    city:document.getElementById('f-city').value.trim(),
-    job:document.getElementById('f-job').value.trim(),
-    height:h?parseInt(h):null,weight:w?parseInt(w):null,
-    bio:document.getElementById('f-bio').value.trim(),
-    phone:document.getElementById('f-phone').value.trim(),
-    interests:gch(),socials:gs(),
-    matchPref:{
-      ageMin:document.getElementById('f-agemin').value?parseInt(document.getElementById('f-agemin').value):null,
-      ageMax:document.getElementById('f-agemax').value?parseInt(document.getElementById('f-agemax').value):null,
-      heightMin:document.getElementById('f-heightmin').value?parseInt(document.getElementById('f-heightmin').value):null,
-      heightMax:document.getElementById('f-heightmax').value?parseInt(document.getElementById('f-heightmax').value):null,
-      weightMin:document.getElementById('f-weightmin').value?parseInt(document.getElementById('f-weightmin').value):null,
-      weightMax:document.getElementById('f-weightmax').value?parseInt(document.getElementById('f-weightmax').value):null,
-      gender:document.getElementById('f-gender-pref').value,
-      status:document.getElementById('f-status-pref').value,
-      religion:document.getElementById('f-rel-pref').value,
-      seeking:document.getElementById('f-seeking-pref').value,
-      nationality:document.getElementById('f-nat-pref').value,
-      country:document.getElementById('f-country-pref').value,
-      city:document.getElementById('f-city-pref').value.trim(),
-      job:document.getElementById('f-job-pref').value.trim()
-    }});
-  const accessCode = 'LOVE-' + Math.random().toString(36).substr(2,4).toUpperCase();
-  saveToAirtable({name,age,gender,looking,accessCode,nat:document.getElementById('f-nat').value,status:document.getElementById('f-status').value,religion:document.getElementById('f-religion').value,seeking:document.getElementById('f-seeking').value,country:document.getElementById('f-country').value,city:document.getElementById('f-city').value.trim(),job:document.getElementById('f-job').value.trim(),height:document.getElementById('f-h').value?parseInt(document.getElementById('f-h').value):null,weight:document.getElementById('f-w').value?parseInt(document.getElementById('f-w').value):null,bio:document.getElementById('f-bio').value.trim(),interests:gch(),socials:gs(),matchPref:{ageMin:document.getElementById('f-agemin').value?parseInt(document.getElementById('f-agemin').value):null,ageMax:document.getElementById('f-agemax').value?parseInt(document.getElementById('f-agemax').value):null,religion:document.getElementById('f-rel-pref').value,nationality:document.getElementById('f-nat-pref').value,country:document.getElementById('f-country-pref').value,status:document.getElementById('f-status-pref').value}});
-  showToast('Inscription envoyée ! En attente de validation ⏳ Votre code : '+accessCode);
-  ['f-name','f-age','f-city','f-job','f-h','f-w','f-bio','f-phone'].forEach(id=>document.getElementById(id).value='');
-  ['f-gender','f-looking','f-nat','f-status','f-religion','f-seeking','f-country','f-rel-pref','f-nat-pref','f-country-pref','f-status-pref','f-gender-pref','f-seeking-pref'].forEach(id=>document.getElementById(id).value='');
-  ['f-agemin','f-agemax','f-heightmin','f-heightmax','f-weightmin','f-weightmax'].forEach(id=>document.getElementById(id).value='');
-  ['f-city-pref','f-job-pref'].forEach(id=>document.getElementById(id).value='');
-  rs();rch();
+  if(!tiktok){showToast('Le pseudo TikTok est obligatoire ⚠️');return;}
+  const h=document.getElementById('f-h').value;
+  const w=document.getElementById('f-w').value;
+  const code='LOVE-'+Math.random().toString(36).substr(2,4).toUpperCase();
+  const mp={
+    ageMin:document.getElementById('f-agemin').value?parseInt(document.getElementById('f-agemin').value):null,
+    ageMax:document.getElementById('f-agemax').value?parseInt(document.getElementById('f-agemax').value):null,
+    hMin:document.getElementById('f-hmin').value?parseInt(document.getElementById('f-hmin').value):null,
+    hMax:document.getElementById('f-hmax').value?parseInt(document.getElementById('f-hmax').value):null,
+    wMin:document.getElementById('f-wmin').value?parseInt(document.getElementById('f-wmin').value):null,
+    wMax:document.getElementById('f-wmax').value?parseInt(document.getElementById('f-wmax').value):null,
+    gender:document.getElementById('f-gpref').value,
+    status:document.getElementById('f-spref').value,
+    religion:document.getElementById('f-rpref').value,
+    seeking:document.getElementById('f-sekpref').value,
+    nat:document.getElementById('f-natpref').value,
+    country:document.getElementById('f-cpref').value,
+    city:document.getElementById('f-citypref').value.trim(),
+    job:document.getElementById('f-jobpref').value.trim()
+  };
+  const mpStr=Object.entries(mp).filter(([k,v])=>v).map(([k,v])=>k+':'+v).join(' | ');
+  try{
+    const res=await fetch(`https://api.airtable.com/v0/${AT_BASE}/${AT_TABLE}`,{
+      method:'POST',
+      headers:{'Authorization':'Bearer '+AT_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({fields:{
+        'Prénom':name,'Âge':age,'Genre':gender,'Recherche':looking,
+        'Nationalité':document.getElementById('f-nat').value,
+        'Statut marital':document.getElementById('f-status').value,
+        'Religion':document.getElementById('f-religion').value,
+        'Profil recherché':document.getElementById('f-seeking').value,
+        'Pays de résidence':document.getElementById('f-country').value,
+        'Ville de résidence':document.getElementById('f-city').value.trim(),
+        'Profession':document.getElementById('f-job').value.trim(),
+        'Taille (cm)':h?parseInt(h):null,
+        'Poids (kg)':w?parseInt(w):null,
+        'Bio':document.getElementById('f-bio').value.trim(),
+        'TikTok Contact':tiktok,
+        "Centres d'intérêt":gch().join(', '),
+        'Critères matching':mpStr,
+        'Code accès':code,
+        'Date inscription':new Date().toISOString(),
+        'Statut':'⏳ En attente'
+      }})
+    });
+    if(res.ok){
+      showToast('✅ Inscription envoyée ! Votre code : '+code+' (notez-le !)');
+      ['f-name','f-age','f-city','f-job','f-h','f-w','f-bio','f-tiktok','f-agemin','f-agemax','f-hmin','f-hmax','f-wmin','f-wmax','f-citypref','f-jobpref'].forEach(id=>document.getElementById(id).value='');
+      ['f-gender','f-looking','f-nat','f-status','f-religion','f-seeking','f-country','f-gpref','f-spref','f-rpref','f-sekpref','f-natpref','f-cpref'].forEach(id=>document.getElementById(id).value='');
+      rch();
+      setTimeout(()=>showToast('Code: '+code+' — Conservez-le précieusement !'),4000);
+    } else {
+      const err=await res.json();
+      showToast('Erreur: '+JSON.stringify(err));
+    }
+  }catch(e){showToast('Erreur réseau. Réessayez.');}
 }
 
-function rp(){
+// NAVIGATION
+function go(t){
+  document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('active',['register','profiles','match'][i]===t));
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sec-'+t).classList.add('active');
+  if(t==='profiles')loadProfiles();
+  if(t==='match')initMatch();
+}
+
+// LOAD PROFILES
+async function loadProfiles(){
+  document.getElementById('pg').innerHTML='<div class="es"><p>⏳ Chargement...</p></div>';
+  try{
+    const url=`https://api.airtable.com/v0/${AT_BASE}/${AT_TABLE}?filterByFormula={Statut}='✅ Validé'`;
+    const res=await fetch(url,{headers:{'Authorization':'Bearer '+AT_KEY}});
+    const data=await res.json();
+    P=(data.records||[]).map(r=>{
+      const f=r.fields;
+      const mp={};
+      (f['Critères matching']||'').split(' | ').forEach(s=>{const[k,v]=s.split(':');if(k&&v)mp[k.trim()]=v.trim();});
+      return{id:r.id,name:f['Prénom']||'',age:f['Âge']||0,gender:f['Genre']||'',looking:f['Recherche']||'',
+        nat:f['Nationalité']||'',status:f['Statut marital']||'',religion:f['Religion']||'',
+        seeking:f['Profil recherché']||'',country:f['Pays de résidence']||'',city:f['Ville de résidence']||'',
+        job:f['Profession']||'',height:f['Taille (cm)']||null,weight:f['Poids (kg)']||null,
+        bio:f['Bio']||'',tiktok:f['TikTok Contact']||'',
+        interests:(f["Centres d'intérêt"]||'').split(', ').filter(Boolean),mp};
+    });
+    renderProfiles();
+  }catch(e){document.getElementById('pg').innerHTML='<div class="es"><p>Erreur de chargement.</p></div>';}
+}
+
+function renderProfiles(){
   const g=document.getElementById('pg');
   document.getElementById('cnt').textContent=P.length+' profil'+(P.length>1?'s':'');
-  if(!P.length){g.innerHTML='<div class="es"><i class="ti ti-user-off"></i><p>Aucun profil pour l\'instant.<br>Créez-en un !</p></div>';return;}
+  if(!P.length){g.innerHTML='<div class="es"><p>Aucun profil validé pour l\'instant.</p></div>';return;}
   g.innerHTML=P.map((p,i)=>{
     const c=gc(i);
     const ch=p.interests.slice(0,3).map(x=>`<span class="mc">${x}</span>`).join('');
     const ex=p.interests.length>3?`<span class="mc">+${p.interests.length-3}</span>`:'';
-    const sbadge=p.status?`<span class="sb2 ${SC[p.status]}">${SL[p.status]}</span>`:'';
-    const nb=p.nat?`<span class="mc">${p.nat}</span>`:'';
-    const ph=[];if(p.height)ph.push(`📏 ${p.height} cm`);if(p.weight)ph.push(`⚖️ ${p.weight} kg`);
-    const phc=ph.map(x=>`<span class="mc">${x}</span>`).join('');
-    const se=Object.entries(p.socials||{});
-    const sh=se.length?`<div class="psoc">${se.map(([id,ps])=>{const n=NW.find(x=>x.id===id);return`<div class="st"><span style="font-size:14px">${n?n.icon:'🌐'}</span><span class="stn">${n?n.name:id}</span>${ps?`<span class="stp">@${ps}</span>`:`<span class="stz">sans pseudo</span>`}</div>`;}).join('')}</div>`:'';
-    return`<div class="pc"><div class="av" style="background:${c.bg};color:${c.t}">${ini(p.name)}</div><div class="pn">${p.name}, ${p.age} ans</div><div class="pm">${p.gender} · 📍 ${p.city||'—'}</div><div class="pm">${p.job||''}</div><div class="ptags">${sbadge}${nb}${phc}</div><div class="pint">${ch}${ex}</div>${sh}</div>`;
+    const sb=p.status?`<span class="sb2 ${SC[p.status]}">${SL[p.status]}</span>`:'';
+    const ph=[];if(p.height)ph.push(`📏 ${p.height}cm`);if(p.weight)ph.push(`⚖️ ${p.weight}kg`);
+    return`<div class="pc">
+      <div class="av" style="background:${c.bg};color:${c.t}">${ini(p.name)}</div>
+      <div class="pn">${p.name}, ${p.age} ans</div>
+      <div class="pm">${p.gender} · 📍 ${p.city||'—'}${p.country?' · '+p.country:''}</div>
+      <div class="pm">${p.job||''}</div>
+      <div class="pm">${p.religion?'🕊️ '+p.religion:''}</div>
+      <div class="pm">${p.tiktok?'🎵 @'+p.tiktok:''}</div>
+      <div class="ptags">${sb}${p.nat?`<span class="mc">${p.nat}</span>`:''}${ph.map(x=>`<span class="mc">${x}</span>`).join('')}</div>
+      <div class="pint">${ch}${ex}</div>
+    </div>`;
   }).join('');
 }
 
-function pms(){
+// MATCH
+function initMatch(){
   const s=document.getElementById('msel');
   s.innerHTML='<option value="">— Sélectionner —</option>';
-  P.forEach(p=>{const o=document.createElement('option');o.value=p.id;o.textContent=p.name+', '+p.age+' ans';s.appendChild(o);});
-  document.getElementById('mr').innerHTML='';
-  document.getElementById('match-profile-card').style.display='none';
+  if(!P.length){loadProfiles().then(()=>populateSel());}else populateSel();
 }
-
-function score(a,b){
-  if(!((a.looking==='Tous'||a.looking===b.gender)&&(b.looking==='Tous'||b.looking===a.gender)))return 0;
-  // Critères éliminatoires matchPref
-  const mp=a.matchPref||{};
-  if(mp.ageMin&&b.age<mp.ageMin)return 0;
-  if(mp.ageMax&&b.age>mp.ageMax)return 0;
-  if(mp.heightMin&&b.height&&b.height<mp.heightMin)return 0;
-  if(mp.heightMax&&b.height&&b.height>mp.heightMax)return 0;
-  if(mp.weightMin&&b.weight&&b.weight<mp.weightMin)return 0;
-  if(mp.weightMax&&b.weight&&b.weight>mp.weightMax)return 0;
+function populateSel(){
+  const s=document.getElementById('msel');
+  P.forEach(p=>{const o=document.createElement('option');o.value=p.id;o.textContent=p.name+', '+p.age+' ans';s.appendChild(o);});
+}
+function calcScore(a,b){
+  const mp=a.mp||{};
+  if(mp.ageMin&&b.age<parseInt(mp.ageMin))return 0;
+  if(mp.ageMax&&b.age>parseInt(mp.ageMax))return 0;
+  if(mp.hMin&&b.height&&b.height<parseInt(mp.hMin))return 0;
+  if(mp.hMax&&b.height&&b.height>parseInt(mp.hMax))return 0;
+  if(mp.wMin&&b.weight&&b.weight<parseInt(mp.wMin))return 0;
+  if(mp.wMax&&b.weight&&b.weight>parseInt(mp.wMax))return 0;
   if(mp.gender&&b.gender&&mp.gender!==b.gender)return 0;
-  if(mp.religion&&b.religion&&mp.religion!==b.religion)return 0;
-  if(mp.nationality&&b.nat&&mp.nationality!==b.nat)return 0;
-  if(mp.country&&b.country&&mp.country!==b.country)return 0;
   if(mp.status&&b.status&&mp.status!==b.status)return 0;
+  if(mp.religion&&b.religion&&mp.religion!==b.religion)return 0;
   if(mp.seeking&&b.seeking&&mp.seeking!==b.seeking)return 0;
-  if(mp.city&&b.city&&mp.city.toLowerCase()!==b.city.toLowerCase())return 0;
-  if(mp.job&&b.job&&!b.job.toLowerCase().includes(mp.job.toLowerCase()))return 0;
-  // Score
+  if(mp.nat&&b.nat&&mp.nat!==b.nat)return 0;
+  if(mp.country&&b.country&&mp.country!==b.country)return 0;
   let s=0;
   s+=a.interests.filter(i=>b.interests.includes(i)).length*15;
   const d=Math.abs(a.age-b.age);s+=d<=3?25:d<=7?15:d<=12?5:0;
   if(a.city&&b.city&&a.city.toLowerCase()===b.city.toLowerCase())s+=20;
-  s+=Object.keys(a.socials||{}).filter(n=>Object.keys(b.socials||{}).includes(n)).length*8;
   if(a.nat&&b.nat&&a.nat===b.nat)s+=10;
-  if(a.status&&b.status&&a.status===b.status)s+=5;
   if(a.religion&&b.religion&&a.religion===b.religion)s+=10;
   if(a.seeking&&b.seeking&&a.seeking===b.seeking)s+=10;
-  if(a.country&&b.country&&a.country===b.country)s+=10;
+  if(a.country&&b.country&&a.country===b.country)s+=8;
   return Math.min(s,99);
 }
-
 function runMatch(){
-  const id=parseInt(document.getElementById('msel').value);
+  const id=document.getElementById('msel').value;
   const r=document.getElementById('mr');
-  const spc=document.getElementById('match-profile-card');
+  const spc=document.getElementById('spc-card');
   if(!id){showToast('Choisissez un profil ⚠️');return;}
   const tgt=P.find(p=>p.id===id);
-  const oth=P.filter(p=>p.id!==id);
-
-  // Afficher la carte du profil sélectionné
-  const ci=P.indexOf(tgt);
-  const cc=gc(ci);
-  spc.style.display='flex';
-  const tgtTags=[
-    tgt.status?`<span class="spc-tag">${SL[tgt.status]}</span>`:'',
-    tgt.nat?`<span class="spc-tag">${tgt.nat}</span>`:'',
-    tgt.religion?`<span class="spc-tag">🕊️ ${tgt.religion}</span>`:'',
-    tgt.seeking?`<span class="spc-tag">🔍 ${tgt.seeking}</span>`:'',
-    tgt.height?`<span class="spc-tag">📏 ${tgt.height}cm</span>`:'',
-    tgt.weight?`<span class="spc-tag">⚖️ ${tgt.weight}kg</span>`:'',
-  ].filter(Boolean).join('');
-  spc.innerHTML=`<div class="spc-av" style="background:${cc.bg};color:${cc.t}">${ini(tgt.name)}</div>
-    <div class="spc-info">
-      <div class="spc-name">${tgt.name}, ${tgt.age} ans</div>
-      <div class="spc-meta">${tgt.gender} · 📍 ${tgt.city||'—'}${tgt.country?' · '+tgt.country:''}</div>
-      <div class="spc-meta">${tgt.job||''}</div>
-      <div class="spc-tags">${tgtTags}</div>
-    </div>`;
-
-  if(!oth.length){r.innerHTML='<div class="no-match"><i class="ti ti-users"></i><p>Pas encore assez de profils pour matcher.</p></div>';return;}
-
-  const sc=oth.map(p=>({...p,score:score(tgt,p),details:getScoreDetails(tgt,p)})).filter(p=>p.score>0).sort((a,b)=>b.score-a.score);
-
-  if(!sc.length){r.innerHTML='<div class="no-match"><i class="ti ti-heart-off"></i><p>Aucun profil compatible trouvé selon vos critères.</p></div>';return;}
-
-  // Séparer en groupes
-  const top=sc.filter(p=>p.score>=60);
-  const mid=sc.filter(p=>p.score>=35&&p.score<60);
-  const low=sc.filter(p=>p.score<35);
-
+  if(!tgt)return;
+  const ci=P.indexOf(tgt);const cc=gc(ci);
+  spc.innerHTML=`<div class="spc-card"><div class="av" style="background:${cc.bg};color:${cc.t};width:48px;height:48px;font-size:17px;flex-shrink:0">${ini(tgt.name)}</div><div><div style="font-weight:700;color:var(--pink);font-size:16px">${tgt.name}, ${tgt.age} ans</div><div style="font-size:12px;color:var(--text2)">📍 ${tgt.city||'—'} · ${tgt.gender}</div></div></div>`;
+  const others=P.filter(p=>p.id!==id);
+  if(!others.length){r.innerHTML='<div class="no-match"><p>Pas encore assez de profils.</p></div>';return;}
+  const sc=others.map(p=>({...p,score:calcScore(tgt,p)})).filter(p=>p.score>0).sort((a,b)=>b.score-a.score);
+  if(!sc.length){r.innerHTML='<div class="no-match"><p>Aucune compatibilité trouvée.</p></div>';return;}
+  const top=sc.filter(p=>p.score>=60),mid=sc.filter(p=>p.score>=35&&p.score<60),low=sc.filter(p=>p.score<35);
   let html='';
-
-  if(top.length) html+=`<div class="match-section-title">💘 Très compatibles (${top.length})</div>`+top.map((p,i)=>renderMatch(p,i,tgt,true)).join('');
-  if(mid.length) html+=`<div class="match-section-title">💛 Compatibles (${mid.length})</div>`+mid.map((p,i)=>renderMatch(p,i,tgt,false)).join('');
-  if(low.length) html+=`<div class="match-section-title">🤍 Peu compatibles (${low.length})</div>`+low.map((p,i)=>renderMatch(p,i,tgt,false)).join('');
-
+  if(top.length)html+=`<div class="match-section-title">💘 Très compatibles (${top.length})</div>`+top.map((p,i)=>renderMatch(p,i,tgt)).join('');
+  if(mid.length)html+=`<div class="match-section-title">💛 Compatibles (${mid.length})</div>`+mid.map((p,i)=>renderMatch(p,i,tgt)).join('');
+  if(low.length)html+=`<div class="match-section-title">🤍 Peu compatibles (${low.length})</div>`+low.map((p,i)=>renderMatch(p,i,tgt)).join('');
   r.innerHTML=html;
 }
-
-function getScoreDetails(a,b){
-  const commonInterests=a.interests.filter(i=>b.interests.includes(i));
-  const commonNets=Object.keys(a.socials||{}).filter(n=>Object.keys(b.socials||{}).includes(n));
-  const sameCity=a.city&&b.city&&a.city.toLowerCase()===b.city.toLowerCase();
-  const sameCountry=a.country&&b.country&&a.country===b.country;
-  const sameReligion=a.religion&&b.religion&&a.religion===b.religion;
-  const sameNat=a.nat&&b.nat&&a.nat===b.nat;
-  const sameSeeking=a.seeking&&b.seeking&&a.seeking===b.seeking;
-  const ageDiff=Math.abs(a.age-b.age);
-  return{commonInterests,commonNets,sameCity,sameCountry,sameReligion,sameNat,sameSeeking,ageDiff};
-}
-
-function renderMatch(p,i,tgt,isTop){
-  const c=gc(i);
-  const cls=p.score>=60?'h':p.score>=35?'m':'l';
-  const d=p.details;
-  const ph=[];if(p.height)ph.push(`📏${p.height}cm`);if(p.weight)ph.push(`⚖️${p.weight}kg`);
-  const commonChips=d.commonInterests.slice(0,4).map(x=>`<span class="ci-tag">${x}</span>`).join('');
-  const extraInt=d.commonInterests.length>4?`<span class="ci-tag">+${d.commonInterests.length-4}</span>`:'';
-  const netHtml=d.commonNets.length?`<div class="msp">${d.commonNets.map(n=>{const net=NW.find(x=>x.id===n);const ps=p.socials[n];return`<span class="mpp">${net?net.icon:''} ${net?net.name:n}${ps?' · @'+ps:''}</span>`;}).join('')}</div>`:'';
-  const points=[];
-  if(d.sameCity) points.push('📍 Même ville');
-  if(d.sameCountry&&!d.sameCity) points.push('🌍 Même pays');
-  if(d.sameReligion) points.push('🕊️ Même religion');
-  if(d.sameNat) points.push('🏳️ Même nationalité');
-  if(d.sameSeeking) points.push('🎯 Même objectif');
-  if(d.ageDiff<=3) points.push('🎂 Âges proches');
-  const pointsHtml=points.length?`<div class="msp">${points.map(pt=>`<span class="mpp">${pt}</span>`).join('')}</div>`:'';
-  return`<div class="mrc${isTop?' top-match':''}">
+function renderMatch(p,i,tgt){
+  const c=gc(i);const cls=p.score>=60?'h':p.score>=35?'m':'l';
+  const cm=tgt.interests.filter(x=>p.interests.includes(x));
+  const pts=[];
+  if(tgt.city&&p.city&&tgt.city.toLowerCase()===p.city.toLowerCase())pts.push('📍 Même ville');
+  if(tgt.country&&p.country&&tgt.country===p.country&&!(tgt.city&&p.city&&tgt.city.toLowerCase()===p.city.toLowerCase()))pts.push('🌍 Même pays');
+  if(tgt.religion&&p.religion&&tgt.religion===p.religion)pts.push('🕊️ Même religion');
+  if(tgt.nat&&p.nat&&tgt.nat===p.nat)pts.push('🏳️ Même nationalité');
+  if(tgt.seeking&&p.seeking&&tgt.seeking===p.seeking)pts.push('🎯 Même objectif');
+  return`<div class="mrc${p.score>=60?' top-match':''}">
     <div class="av" style="background:${c.bg};color:${c.t};width:44px;height:44px;font-size:15px;flex-shrink:0">${ini(p.name)}</div>
     <div class="mif">
-      <div class="mn">${p.name}, ${p.age} ans · 📍 ${p.city||'—'}${p.country?' · '+p.country:''}</div>
-      <div class="md">${p.gender}${p.job?' · '+p.job:''}${ph.length?' · '+ph.join(' '):''}${p.religion?' · 🕊️ '+p.religion:''}</div>
-      ${d.commonInterests.length?`<div class="common-interests">${commonChips}${extraInt}</div>`:''}
-      ${pointsHtml}
-      ${netHtml}
+      <div class="mn">${p.name}, ${p.age} ans · 📍 ${p.city||'—'}</div>
+      <div class="md">${p.gender}${p.job?' · '+p.job:''}${p.religion?' · 🕊️ '+p.religion:''}</div>
+      ${p.tiktok?`<div class="md">🎵 @${p.tiktok}</div>`:''}
+      ${cm.length?`<div class="msp">${cm.slice(0,4).map(x=>`<span class="ci-tag">${x}</span>`).join('')}</div>`:''}
+      ${pts.length?`<div class="msp">${pts.map(x=>`<span class="mpp">${x}</span>`).join('')}</div>`:''}
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0">
       <span class="mscore ${cls}">${p.score}%</span>
@@ -904,83 +505,7 @@ function renderMatch(p,i,tgt,isTop){
   </div>`;
 }
 
-function showToast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg;
-  t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2800);
-}
-
-buildNets();
-
-// ========== SYSTÈME DE CONNEXION ==========
-function initApp(){
-  const isLogged = sessionStorage.getItem('cl_logged');
-  const ls = document.getElementById('login-screen');
-  const ma = document.getElementById('main-app');
-  if(isLogged==='true'||isLogged==='guest'){
-    ls.style.display='none';
-    ma.style.display='block';
-  } else {
-    ls.style.display='flex';
-    ma.style.display='none';
-  }
-}
-
-function showLoginTab(tab){
-  document.getElementById('login-code-panel').style.display = tab==='code'?'block':'none';
-  document.getElementById('login-register-panel').style.display = tab==='register'?'block':'none';
-  document.getElementById('tab-code').style.background = tab==='code'?'#D4537E':'transparent';
-  document.getElementById('tab-code').style.color = tab==='code'?'white':'var(--text2)';
-  document.getElementById('tab-register').style.background = tab==='register'?'#D4537E':'transparent';
-  document.getElementById('tab-register').style.color = tab==='register'?'white':'var(--text2)';
-}
-
-async function checkAccessCode(){
-  const code = document.getElementById('access-code-input').value.trim().toUpperCase();
-  const errEl = document.getElementById('login-error');
-  if(!code){ errEl.style.display='block'; errEl.textContent='Veuillez entrer votre code.'; return; }
-  try {
-    const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}?filterByFormula=AND({Code accès}='${code}',{Statut}='✅ Validé')`;
-    const res = await fetch(url, { headers:{'Authorization':`Bearer ${AIRTABLE_API_KEY}`} });
-    const data = await res.json();
-    if(data.records && data.records.length>0){
-      sessionStorage.setItem('cl_logged','true');
-      sessionStorage.setItem('cl_name', data.records[0].fields['Prénom']||'');
-      document.getElementById('login-screen').style.display='none';
-      document.getElementById('main-app').style.display='block';
-      errEl.style.display='none';
-    } else {
-      errEl.style.display='block';
-      errEl.textContent='Code incorrect ou profil non encore validé.';
-    }
-  } catch(e){
-    errEl.style.display='block';
-    errEl.textContent='Erreur de connexion. Réessayez.';
-  }
-}
-
-function goToRegister(){
-  const ls = document.getElementById('login-screen');
-  const ma = document.getElementById('main-app');
-  ls.style.display='none';
-  ma.style.display='block';
-  sessionStorage.setItem('cl_logged','guest');
-  go('register');
-}
-
-// Ajouter bouton déconnexion dans le header
-document.addEventListener('DOMContentLoaded', function(){
-  const header = document.querySelector('.header');
-  const logoutBtn = document.createElement('button');
-  logoutBtn.textContent = '🚪 Déconnexion';
-  logoutBtn.style.cssText = 'padding:6px 12px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);font-size:12px;cursor:pointer;font-family:DM Sans,sans-serif;';
-  logoutBtn.onclick = ()=>{ sessionStorage.removeItem('cl_logged'); sessionStorage.removeItem('cl_name'); initApp(); };
-  header.appendChild(logoutBtn);
-});
-
-initApp();
-// ==========================================
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),5000);}
 </script>
 </body>
 </html>
