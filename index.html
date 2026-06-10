@@ -744,8 +744,9 @@ function save(){
       city:document.getElementById('f-city-pref').value.trim(),
       job:document.getElementById('f-job-pref').value.trim()
     }});
+  const accessCode = 'LOVE-' + Math.random().toString(36).substr(2,4).toUpperCase();
   saveToAirtable({name,age,gender,looking,accessCode,nat:document.getElementById('f-nat').value,status:document.getElementById('f-status').value,religion:document.getElementById('f-religion').value,seeking:document.getElementById('f-seeking').value,country:document.getElementById('f-country').value,city:document.getElementById('f-city').value.trim(),job:document.getElementById('f-job').value.trim(),height:document.getElementById('f-h').value?parseInt(document.getElementById('f-h').value):null,weight:document.getElementById('f-w').value?parseInt(document.getElementById('f-w').value):null,bio:document.getElementById('f-bio').value.trim(),interests:gch(),socials:gs(),matchPref:{ageMin:document.getElementById('f-agemin').value?parseInt(document.getElementById('f-agemin').value):null,ageMax:document.getElementById('f-agemax').value?parseInt(document.getElementById('f-agemax').value):null,religion:document.getElementById('f-rel-pref').value,nationality:document.getElementById('f-nat-pref').value,country:document.getElementById('f-country-pref').value,status:document.getElementById('f-status-pref').value}});
-  showToast('Inscription envoyée ! En attente de validation ⏳');
+  showToast('Inscription envoyée ! En attente de validation ⏳ Votre code : '+accessCode);
   ['f-name','f-age','f-city','f-job','f-h','f-w','f-bio','f-phone'].forEach(id=>document.getElementById(id).value='');
   ['f-gender','f-looking','f-nat','f-status','f-religion','f-seeking','f-country','f-rel-pref','f-nat-pref','f-country-pref','f-status-pref','f-gender-pref','f-seeking-pref'].forEach(id=>document.getElementById(id).value='');
   ['f-agemin','f-agemax','f-heightmin','f-heightmax','f-weightmin','f-weightmax'].forEach(id=>document.getElementById(id).value='');
