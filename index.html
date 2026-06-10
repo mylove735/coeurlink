@@ -197,7 +197,7 @@
 <body>
 
 <!-- ECRAN DE CONNEXION -->
-<div id="login-screen" style="display:none;min-height:100vh;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:1.5rem;">
+<div id="login-screen" style="min-height:100vh;background:var(--bg);align-items:center;justify-content:center;padding:1.5rem;display:none;">
   <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;max-width:400px;width:100%;text-align:center;">
     <div style="font-family:'Playfair Display',serif;font-size:28px;margin-bottom:8px;">coeur<span style="color:#D4537E;">link</span></div>
     <p style="color:var(--text2);font-size:14px;margin-bottom:1.5rem;">Entrez votre code d'accès pour accéder aux profils</p>
@@ -916,12 +916,14 @@ buildNets();
 // ========== SYSTÈME DE CONNEXION ==========
 function initApp(){
   const isLogged = sessionStorage.getItem('cl_logged');
-  if(isLogged==='true'){
-    document.getElementById('login-screen').style.display='none';
-    document.getElementById('main-app').style.display='block';
+  const ls = document.getElementById('login-screen');
+  const ma = document.getElementById('main-app');
+  if(isLogged==='true'||isLogged==='guest'){
+    ls.style.display='none';
+    ma.style.display='block';
   } else {
-    document.getElementById('login-screen').style.display='flex';
-    document.getElementById('main-app').style.display='none';
+    ls.style.display='flex';
+    ma.style.display='none';
   }
 }
 
@@ -959,8 +961,11 @@ async function checkAccessCode(){
 }
 
 function goToRegister(){
-  document.getElementById('login-screen').style.display='none';
-  document.getElementById('main-app').style.display='block';
+  const ls = document.getElementById('login-screen');
+  const ma = document.getElementById('main-app');
+  ls.style.display='none';
+  ma.style.display='block';
+  sessionStorage.setItem('cl_logged','guest');
   go('register');
 }
 
