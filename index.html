@@ -470,10 +470,12 @@ function renderProfiles(){
 }
 
 // MATCH
-function initMatch(){
+async function initMatch(){
   const s=document.getElementById('msel');
+  s.innerHTML='<option value="">⏳ Chargement...</option>';
+  await loadProfiles();
   s.innerHTML='<option value="">— Sélectionner —</option>';
-  if(!P.length){loadProfiles().then(()=>populateSel());}else populateSel();
+  populateSel();
 }
 function populateSel(){
   const s=document.getElementById('msel');
@@ -503,11 +505,12 @@ function calcScore(a,b){
   if(a.country&&b.country&&a.country===b.country)s+=8;
   return Math.min(s,99);
 }
-function runMatch(){
+async function runMatch(){
   const id=document.getElementById('msel').value;
   const r=document.getElementById('mr');
   const spc=document.getElementById('spc-card');
   if(!id){showToast('Choisissez un profil ⚠️');return;}
+  if(!P.length){ await loadProfiles(); }
   const tgt=P.find(p=>p.id===id);
   if(!tgt)return;
   const ci=P.indexOf(tgt);const cc=gc(ci);
