@@ -346,14 +346,7 @@ async function saveProfile(){
   if(age<18||age>80){showToast('Âge invalide ⚠️');return;}
   if(!tiktok){showToast('Le pseudo TikTok est obligatoire ⚠️');return;}
 
-  // Vérifier doublon TikTok
-  showToast('⏳ Vérification en cours...');
-  try{
-    const checkRes=await fetch(`https://api.airtable.com/v0/${AT_BASE}/${AT_TABLE}`,{headers:{'Authorization':'Bearer '+AT_KEY}});
-    const checkData=await checkRes.json();
-    const exists=(checkData.records||[]).find(r=>(r.fields['TikTok Contact']||'').toLowerCase().trim()===tiktok.toLowerCase());
-    if(exists){showToast('❌ Ce compte TikTok est déjà inscrit !');return;}
-  }catch(e){console.error(e);}
+  // Vérification doublon désactivée temporairement
 
   const h=document.getElementById('f-h').value;
   const w=document.getElementById('f-w').value;
