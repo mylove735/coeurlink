@@ -169,6 +169,11 @@
             <div style="position:relative"><span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--pink);font-weight:600;font-size:14px;">@</span><input id="f-tiktok" placeholder="sos154789" style="padding-left:30px"/><small style="color:var(--text2);font-size:11px;margin-top:4px;display:block">📌 Renseignez votre pseudo TikTok pour être contacté(e) par vos matchs</small></div>
           </div>
         </div>
+        <div class="fg full">
+          <label>💚 WhatsApp (pour recevoir votre code)</label>
+          <input id="f-whatsapp" type="tel" placeholder="Ex: 33612345678"/>
+          <small style="color:var(--text2);font-size:11px;margin-top:4px;display:block">📌 Numéro sans le 0 initial (ex: 33612345678)</small>
+        </div>
 
         <div class="fsl">Critères de recherche</div>
         <div class="form-grid">
@@ -385,7 +390,7 @@ async function saveProfile(){
         'Poids (kg)':w?parseInt(w):null,
         'Bio':document.getElementById('f-bio').value.trim(),
         'TikTok Contact':tiktok,
-            'WhatsApp':document.getElementById('f-whatsapp').value.trim(),
+            'WhatsApp':(document.getElementById('f-whatsapp')?document.getElementById('f-whatsapp').value.trim():''),
         "Centres d'intérêt":gch().join(', '),
         'Critères matching':mpStr,
         'Code accès':code,
