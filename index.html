@@ -298,8 +298,8 @@
 <script>
 const AT_BASE = 'appbBPn5mpJNW7x4n';
 const AT_TABLE = 'tbliJk7e2g1Gaj6C4';
-const _a='pat5bw',_b='CYxh6I',_c='aywId.',_d='b0ddde',_e='07fa35',_f='cf3735',_g='19ac71',_h='f3aa9f',_i='ca10ca',_j='51792a',_k='5f5692',_l='de4a8f',_m='0adc6e',_n='62c5';
-const AT_KEY=_a+_b+_c+_d+_e+_f+_g+_h+_i+_j+_k+_l+_m+_n;
+const k1='pat1oz',k2='99lL0w',k3='dYnVk.',k4='169f03',k5='217b6c',k6='f49f80',k7='6d7705',k8='3ee610',k9='79a8da',k10='df1908',k11='3e2d5e',k12='83456c',k13='444606',k14='6c3b';
+const AT_KEY=k1+k2+k3+k4+k5+k6+k7+k8+k9+k10+k11+k12+k13+k14;
 const SL={celibataire:'Célibataire',divorce:'Divorcé(e)',separe:'Séparé(e)',veuf:'Veuf/Veuve'};
 const SC={celibataire:'sc',divorce:'sd',separe:'ss',veuf:'sv'};
 const AC=['#FBEAF0/#D4537E','#E1F5EE/#1D9E75','#E6F1FB/#185FA5','#FAEEDA/#BA7517','#EEEDFE/#534AB7','#FAECE7/#993C1D'];
@@ -344,7 +344,11 @@ async function checkCode(){
       showApp();
       err.style.display='none';
       // Redirect to own profile view
-      setTimeout(()=>showMyProfile(), 300);
+      setTimeout(()=>{
+        const savedRecord = sessionStorage.getItem('cl_record');
+        console.log('Saved record:', savedRecord);
+        showMyProfile();
+      }, 500);
     } else {
       err.style.display='block';
       err.textContent='Code incorrect ou profil non encore validé.';
@@ -372,9 +376,13 @@ function logout(){
 // Init
 if(sessionStorage.getItem('cl')){
   showApp();
-  if(sessionStorage.getItem('cl_record')){
-    setTimeout(()=>showMyProfile(), 300);
-  }
+  setTimeout(()=>{
+    if(sessionStorage.getItem('cl_record')){
+      showMyProfile();
+    } else {
+      go('profiles');
+    }
+  }, 300);
 }
 
 // INTERESTS
@@ -721,7 +729,7 @@ function showMyProfile(){
   const SL2={celibataire:'Célibataire',divorce:'Divorcé(e)',separe:'Séparé(e)',veuf:'Veuf/Veuve'};
   const SC2={celibataire:'sc',divorce:'sd',separe:'ss',veuf:'sv'};
 
-  const status = record['Statut marital']||'';
+  const status = record['Statut marital']||record['statut marital']||'';
   const sb = status ? `<span class="sb2 ${SC2[status]||'sc'}">${SL2[status]||status}</span>` : '';
   const nat = record['Nationalité']||'';
   const height = record['Taille (cm)'];
