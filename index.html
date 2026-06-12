@@ -95,10 +95,10 @@
 <!-- LOGIN -->
 <div class="login-wrap" id="login-screen">
   <div class="login-card">
-    <div class="login-logo">coeur<span style="color:var(--pink)">link</span></div>
+    <div class="login-logo">AKHAM <span style="color:var(--pink)">USIREM</span></div>
     <p style="color:var(--text2);font-size:14px;margin-bottom:1.5rem">Plateforme de rencontres sérieuses</p>
     <div class="login-tabs">
-      <button class="ltab active" onclick="loginTab('code')">🔐 J'ai un code</button>
+      <button class="ltab active" onclick="loginTab('code')">🔐 Connexion</button>
       <button class="ltab" onclick="loginTab('new')">📝 M'inscrire</button>
     </div>
     <div id="panel-code">
@@ -125,7 +125,7 @@
 <!-- APP -->
 <div id="app" style="display:none">
   <div class="header">
-    <div class="logo">coeur<span>link</span></div>
+    <div class="logo">AKHAM <span>USIREM</span></div>
     <div class="tabs">
       <button class="tab active" onclick="go('register')">✏️ Créer</button>
       <button class="tab" onclick="go('profiles')">👥 Profils</button>
@@ -315,47 +315,37 @@ function loginTab(t){
 }
 async function checkCode(){
   const code=document.getElementById('access-input').value.trim();
+  const wa=document.getElementById('wa-input').value.trim().replace(/\s/g,'');
   const err=document.getElementById('login-err');
-  if(!code){err.style.display='block';err.textContent='Entrez votre code.';return;}
+  if(!wa){err.style.display='block';err.textContent='Entrez votre numéro WhatsApp.';return;}
+  if(!code){err.style.display='block';err.textContent='Entrez votre code à 6 chiffres.';return;}
   try{
-    // Fetch ALL records and check code + statut manually
     const url=`https://api.airtable.com/v0/${AT_BASE}/${AT_TABLE}`;
     const res=await fetch(url,{headers:{'Authorization':'Bearer '+AT_KEY}});
     const data=await res.json();
-    console.log('All records:', JSON.stringify(data));
     const match = (data.records||[]).find(r => {
       const f = r.fields;
       const recordCode = (f['Code accès']||'').toString().trim();
+      const recordWa = (f['WhatsApp']||'').toString().trim().replace(/\s/g,'');
       const statut = (f['Statut']||'').toString().trim();
-      console.log('Code:', recordCode, 'Statut:', statut, 'Input:', code);
-      return recordCode === code.trim() && statut.includes('Valid');
+      return recordCode === code && recordWa === wa && statut.includes('Valid');
     });
     if(match){
       sessionStorage.setItem('cl','ok');
-      // Save info of logged in user
-      const allR = data.records||[];
-      const myRecord = allR.find(r=>(r.fields['Code accès']||'').toString().trim()===code.trim());
-      if(myRecord){
-        sessionStorage.setItem('cl_gender', myRecord.fields['Genre']||'');
-        sessionStorage.setItem('cl_name', myRecord.fields['Prénom']||'');
-        sessionStorage.setItem('cl_id', myRecord.id||'');
-        sessionStorage.setItem('cl_record', JSON.stringify(myRecord.fields));
-      }
+      sessionStorage.setItem('cl_gender', match.fields['Genre']||'');
+      sessionStorage.setItem('cl_name', match.fields['Prénom']||'');
+      sessionStorage.setItem('cl_id', match.id||'');
+      sessionStorage.setItem('cl_record', JSON.stringify(match.fields));
       showApp();
       err.style.display='none';
-      // Redirect to own profile view
-      setTimeout(()=>{
-        const savedRecord = sessionStorage.getItem('cl_record');
-        console.log('Saved record:', savedRecord);
-        showMyProfile();
-      }, 500);
+      setTimeout(()=>showMyProfile(), 500);
     } else {
       err.style.display='block';
-      err.textContent='Code incorrect ou profil non encore validé.';
+      err.textContent='Identifiants incorrects ou profil non validé.';
     }
   }catch(e){
     err.style.display='block';
-    err.textContent='Erreur. Réessayez.';
+    err.textContent='Erreur réseau. Réessayez.';
     console.error(e);
   }
 }
