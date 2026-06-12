@@ -171,8 +171,50 @@
         </div>
         <div class="fg full">
           <label>💚 WhatsApp (pour recevoir votre code)</label>
-          <input id="f-whatsapp" type="tel" placeholder="Ex: 33612345678"/>
-          <small style="color:var(--text2);font-size:11px;margin-top:4px;display:block">📌 Numéro sans le 0 initial (ex: 33612345678)</small>
+          <div style="display:flex;gap:8px;">
+            <select id="f-wacountry" style="width:180px;flex-shrink:0;">
+              <option value="213">🇩🇿 Algérie (+213)</option>
+              <option value="33">🇫🇷 France (+33)</option>
+              <option value="32">🇧🇪 Belgique (+32)</option>
+              <option value="41">🇨🇭 Suisse (+41)</option>
+              <option value="1">🇨🇦 Canada (+1)</option>
+              <option value="212">🇲🇦 Maroc (+212)</option>
+              <option value="216">🇹🇳 Tunisie (+216)</option>
+              <option value="221">🇸🇳 Sénégal (+221)</option>
+              <option value="225">🇨🇮 Côte d'Ivoire (+225)</option>
+              <option value="237">🇨🇲 Cameroun (+237)</option>
+              <option value="229">🇧🇯 Bénin (+229)</option>
+              <option value="223">🇲🇱 Mali (+223)</option>
+              <option value="224">🇬🇳 Guinée (+224)</option>
+              <option value="226">🇧🇫 Burkina (+226)</option>
+              <option value="228">🇹🇬 Togo (+228)</option>
+              <option value="242">🇨🇬 Congo (+242)</option>
+              <option value="44">🇬🇧 Royaume-Uni (+44)</option>
+              <option value="49">🇩🇪 Allemagne (+49)</option>
+              <option value="34">🇪🇸 Espagne (+34)</option>
+              <option value="39">🇮🇹 Italie (+39)</option>
+              <option value="351">🇵🇹 Portugal (+351)</option>
+              <option value="31">🇳🇱 Pays-Bas (+31)</option>
+              <option value="1">🇺🇸 États-Unis (+1)</option>
+              <option value="55">🇧🇷 Brésil (+55)</option>
+              <option value="52">🇲🇽 Mexique (+52)</option>
+              <option value="81">🇯🇵 Japon (+81)</option>
+              <option value="86">🇨🇳 Chine (+86)</option>
+              <option value="82">🇰🇷 Corée (+82)</option>
+              <option value="91">🇮🇳 Inde (+91)</option>
+              <option value="90">🇹🇷 Turquie (+90)</option>
+              <option value="7">🇷🇺 Russie (+7)</option>
+              <option value="380">🇺🇦 Ukraine (+380)</option>
+              <option value="20">🇪🇬 Égypte (+20)</option>
+              <option value="218">🇱🇾 Libye (+218)</option>
+              <option value="222">🇲🇷 Mauritanie (+222)</option>
+              <option value="234">🇳🇬 Nigeria (+234)</option>
+              <option value="254">🇰🇪 Kenya (+254)</option>
+              <option value="27">🇿🇦 Afrique du Sud (+27)</option>
+            </select>
+            <input id="f-whatsapp" type="tel" placeholder="612345678" style="flex:1"/>
+          </div>
+          <small style="color:var(--text2);font-size:11px;margin-top:4px;display:block">📌 Entrez votre numéro sans le 0 initial ni l'indicatif</small>
         </div>
 
         <div class="fsl">Critères de recherche</div>
@@ -390,7 +432,7 @@ async function saveProfile(){
         'Poids (kg)':w?parseInt(w):null,
         'Bio':document.getElementById('f-bio').value.trim(),
         'TikTok Contact':tiktok,
-            'WhatsApp':(document.getElementById('f-whatsapp')?document.getElementById('f-whatsapp').value.trim():''),
+            'WhatsApp':(document.getElementById('f-wacountry')&&document.getElementById('f-whatsapp')?document.getElementById('f-wacountry').value+document.getElementById('f-whatsapp').value.trim():''),
         "Centres d'intérêt":gch().join(', '),
         'Critères matching':mpStr,
         'Code accès':code,
@@ -401,6 +443,7 @@ async function saveProfile(){
     if(res.ok){
       showToast('✅ Inscription envoyée ! Contactez @akham_usirem sur TikTok pour votre code.');
       ['f-name','f-age','f-city','f-job','f-h','f-w','f-bio','f-tiktok','f-whatsapp','f-agemin','f-agemax','f-hmin','f-hmax','f-wmin','f-wmax','f-citypref','f-jobpref'].forEach(id=>document.getElementById(id).value='');
+  if(document.getElementById('f-wacountry'))document.getElementById('f-wacountry').selectedIndex=0;
       ['f-gender','f-looking','f-nat','f-status','f-religion','f-seeking','f-country','f-gpref','f-spref','f-rpref','f-sekpref','f-natpref','f-cpref'].forEach(id=>document.getElementById(id).value='');
       rch();
       setTimeout(()=>showToast('📲 TikTok : @akham_usirem — Mentionnez votre prénom + âge'),5000);
