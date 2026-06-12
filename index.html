@@ -102,9 +102,14 @@
       <button class="ltab" onclick="loginTab('new')">📝 M'inscrire</button>
     </div>
     <div id="panel-code">
-      <input class="login-input" id="access-input" placeholder="123456" />
-      <button class="login-btn" onclick="checkCode()">Accéder 💘</button>
-      <p style="color:var(--text2);font-size:12px;margin-top:10px">Le code vous est communiqué après validation de votre profil.</p>
+      <div style="text-align:left;margin-bottom:10px;">
+        <label style="font-size:12px;color:var(--text2);font-weight:500;display:block;margin-bottom:5px;">💚 Numéro WhatsApp (identifiant)</label>
+        <input style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);font-size:14px;font-family:'DM Sans',sans-serif;letter-spacing:normal;text-transform:none;margin-bottom:12px;" id="wa-input" type="tel" placeholder="Ex: 213612345678"/>
+        <label style="font-size:12px;color:var(--text2);font-weight:500;display:block;margin-bottom:5px;">🔑 Code à 6 chiffres (mot de passe)</label>
+        <input class="login-input" id="access-input" type="number" placeholder="123456"/>
+      </div>
+      <button class="login-btn" onclick="checkCode()">Se connecter 💘</button>
+      <p style="color:var(--text2);font-size:12px;margin-top:10px">Vos identifiants vous sont envoyés par WhatsApp après validation.</p>
     </div>
     <div id="panel-new" style="display:none">
       <p style="color:var(--text2);font-size:13px;margin-bottom:12px">Créez votre profil. Après validation, réclamez votre code d'accès en contactant :</p>
