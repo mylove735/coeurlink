@@ -370,9 +370,12 @@ async function checkCode(){
     const match = (data.records||[]).find(r => {
       const f = r.fields;
       const recordCode = (f['Code accès']||'').toString().trim();
-      const recordWa = (f['WhatsApp']||'').toString().trim().replace(/\s/g,'');
+      // Normaliser le numéro WhatsApp - enlever +, espaces, tirets
+      const recordWa = (f['WhatsApp']||'').toString().trim().replace(/[+\s\-]/g,'');
+      const inputWa = wa.replace(/[+\s\-]/g,'');
       const statut = (f['Statut']||'').toString().trim();
-      return recordCode === code && recordWa === wa && statut.includes('Valid');
+      console.log('Record WA:', recordWa, 'Input WA:', inputWa, 'Code:', recordCode, 'Input code:', code, 'Statut:', statut);
+      return recordCode === code && recordWa === inputWa && statut.includes('Valid');
     });
     if(match){
       sessionStorage.setItem('cl','ok');
