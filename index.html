@@ -466,7 +466,7 @@ function renderProfiles(){
     return`<div class="pc">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
         <div class="av" style="background:${c.bg};color:${c.t};margin-bottom:0">${ini(p.name)}</div>
-        <button onclick="archiveProfile('${p.id}','${p.name}')" style="background:none;border:1px solid #ffcccc;border-radius:8px;padding:4px 8px;cursor:pointer;color:#e05252;font-size:11px;font-family:'DM Sans',sans-serif;">📦 Archiver</button>
+        
       </div>
       <div class="pn">${p.name}, ${p.age} ans</div>
       <div class="pm">${p.gender} · 📍 ${p.city||'—'}${p.country?' · '+p.country:''}</div>
@@ -573,25 +573,7 @@ function renderMatch(p,i,tgt){
   </div>`;
 }
 
-async function archiveProfile(id, name){
-  if(!confirm('Archiver le profil de ' + name + ' ? (le profil sera masqué mais pas supprimé)')) return;
-  try{
-    const res = await fetch(`https://api.airtable.com/v0/${AT_BASE}/${AT_TABLE}/${id}`, {
-      method: 'PATCH',
-      headers: {'Authorization': 'Bearer ' + AT_KEY, 'Content-Type': 'application/json'},
-      body: JSON.stringify({fields: {'Statut': '❌ Refusé'}})
-    });
-    const data = await res.json();
-    if(data.id){
-      showToast('Profil de ' + name + ' archivé 📦');
-      loadProfiles();
-    } else {
-      showToast('Erreur ⚠️');
-    }
-  } catch(e){
-    showToast('Erreur réseau ⚠️');
-  }
-}
+
 
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),5000);}
 </script>
