@@ -332,15 +332,19 @@ async function checkCode(){
     });
     if(match){
       sessionStorage.setItem('cl','ok');
-      // Save gender of logged in user
+      // Save info of logged in user
       const allR = data.records||[];
       const myRecord = allR.find(r=>(r.fields['Code accès']||'').toString().trim()===code.trim());
       if(myRecord){
         sessionStorage.setItem('cl_gender', myRecord.fields['Genre']||'');
         sessionStorage.setItem('cl_name', myRecord.fields['Prénom']||'');
+        sessionStorage.setItem('cl_id', myRecord.id||'');
+        sessionStorage.setItem('cl_record', JSON.stringify(myRecord.fields));
       }
       showApp();
       err.style.display='none';
+      // Redirect to own profile view
+      setTimeout(()=>showMyProfile(), 300);
     } else {
       err.style.display='block';
       err.textContent='Code incorrect ou profil non encore validé.';
@@ -366,7 +370,12 @@ function logout(){
   document.getElementById('app').style.display='none';
 }
 // Init
-if(sessionStorage.getItem('cl')){showApp();}
+if(sessionStorage.getItem('cl')){
+  showApp();
+  if(sessionStorage.getItem('cl_record')){
+    setTimeout(()=>showMyProfile(), 300);
+  }
+}
 
 // INTERESTS
 function togI(){
@@ -440,6 +449,48 @@ async function saveProfile(){
         'Statut':'⏳ En attente'
       }})
     });
+    // Check if edit mode
+    const editId = sessionStorage.getItem('cl_edit_id');
+    
+    if(editId){
+      // Update existing record + set status to En attente
+      const updateRes = await fetch(`https://api.airtable.com/v0/${AT_BASE}/${AT_TABLE}/${editId}`, {
+        method: 'PATCH',
+        headers:{'Authorization':'Bearer '+AT_KEY,'Content-Type':'application/json'},
+        body: JSON.stringify({fields:{
+          'Prénom':name,'Âge':age,'Genre':gender,'Recherche':looking,
+          'Nationalité':document.getElementById('f-nat').value,
+          'Statut marital':document.getElementById('f-status').value,
+          'Religion':document.getElementById('f-religion').value,
+          'Profil recherché':document.getElementById('f-seeking').value,
+          'Pays de résidence':document.getElementById('f-country').value,
+          'Ville de résidence':document.getElementById('f-city').value.trim(),
+          'Profession':document.getElementById('f-job').value.trim(),
+          'Taille (cm)':h?parseInt(h):null,
+          'Poids (kg)':w?parseInt(w):null,
+          'Bio':document.getElementById('f-bio').value.trim(),
+          'TikTok Contact':tiktok,
+          'Statut':'⏳ En attente'
+        }})
+      });
+      if(updateRes.ok){
+        sessionStorage.removeItem('cl_edit_id');
+        // Update stored record
+        const newRecord = JSON.parse(sessionStorage.getItem('cl_record')||'{}');
+        newRecord['Prénom']=name; newRecord['Genre']=gender;
+        sessionStorage.setItem('cl_record', JSON.stringify(newRecord));
+        sessionStorage.setItem('cl_name', name);
+        showToast('✅ Profil mis à jour ! En attente de re-validation.');
+        const btn = document.querySelector('.btn-submit');
+        if(btn) btn.textContent = 'Enregistrer le profil 💌';
+        // Reset form
+        ['f-name','f-age','f-city','f-job','f-h','f-w','f-bio','f-tiktok','f-whatsapp','f-agemin','f-agemax','f-hmin','f-hmax','f-wmin','f-wmax','f-citypref','f-jobpref'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+        ['f-gender','f-looking','f-nat','f-status','f-religion','f-seeking','f-country','f-gpref','f-spref','f-rpref','f-sekpref','f-natpref','f-cpref'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+        rch();
+      }
+      return;
+    }
+
     if(res.ok){
       showToast('✅ Inscription envoyée ! Contactez @akham_usirem sur TikTok pour votre code.');
       ['f-name','f-age','f-city','f-job','f-h','f-w','f-bio','f-tiktok','f-whatsapp','f-agemin','f-agemax','f-hmin','f-hmax','f-wmin','f-wmax','f-citypref','f-jobpref'].forEach(id=>document.getElementById(id).value='');
@@ -617,6 +668,125 @@ function renderMatch(p,i,tgt){
 }
 
 
+
+function editMyProfile(){
+  // Switch to register tab with pre-filled data
+  const record = JSON.parse(sessionStorage.getItem('cl_record')||'{}');
+  const myId = sessionStorage.getItem('cl_id')||'';
+  
+  document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('active',['register','profiles','match'][i]==='register'));
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sec-register').classList.add('active');
+
+  // Pre-fill form with existing data
+  setTimeout(()=>{
+    if(record['Prénom']) document.getElementById('f-name').value = record['Prénom'];
+    if(record['Âge']) document.getElementById('f-age').value = record['Âge'];
+    if(record['Genre']) document.getElementById('f-gender').value = record['Genre'];
+    if(record['Recherche']) document.getElementById('f-looking').value = record['Recherche'];
+    if(record['Nationalité']) document.getElementById('f-nat').value = record['Nationalité'];
+    if(record['Statut marital']) document.getElementById('f-status').value = record['Statut marital'];
+    if(record['Religion']) document.getElementById('f-religion').value = record['Religion'];
+    if(record['Profil recherché']) document.getElementById('f-seeking').value = record['Profil recherché'];
+    if(record['Pays de résidence']) document.getElementById('f-country').value = record['Pays de résidence'];
+    if(record['Ville de résidence']) document.getElementById('f-city').value = record['Ville de résidence'];
+    if(record['Profession']) document.getElementById('f-job').value = record['Profession'];
+    if(record['Taille (cm)']) document.getElementById('f-h').value = record['Taille (cm)'];
+    if(record['Poids (kg)']) document.getElementById('f-w').value = record['Poids (kg)'];
+    if(record['Bio']) document.getElementById('f-bio').value = record['Bio'];
+    if(record['TikTok Contact']) document.getElementById('f-tiktok').value = record['TikTok Contact'];
+    // Mark as edit mode
+    sessionStorage.setItem('cl_edit_id', myId);
+    // Change button text
+    const btn = document.querySelector('.btn-submit');
+    if(btn) btn.textContent = '💾 Mettre à jour mon profil';
+    showToast('✏️ Modifiez vos informations puis cliquez sur "Mettre à jour"');
+  }, 100);
+}
+
+function showMyProfile(){
+  // Switch to profiles tab and show own profile at top
+  document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('active',['register','profiles','match'][i]==='profiles'));
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sec-profiles').classList.add('active');
+
+  const record = JSON.parse(sessionStorage.getItem('cl_record')||'{}');
+  const name = sessionStorage.getItem('cl_name')||'';
+  const gender = sessionStorage.getItem('cl_gender')||'';
+
+  // Build own profile card
+  const AC=['#FBEAF0/#D4537E','#E1F5EE/#1D9E75','#E6F1FB/#185FA5','#FAEEDA/#BA7517'];
+  const c = {bg:'#FBEAF0', t:'#D4537E'};
+  const ini2 = n => n.split(' ').map(x=>x[0]).join('').toUpperCase().slice(0,2);
+  const SL2={celibataire:'Célibataire',divorce:'Divorcé(e)',separe:'Séparé(e)',veuf:'Veuf/Veuve'};
+  const SC2={celibataire:'sc',divorce:'sd',separe:'ss',veuf:'sv'};
+
+  const status = record['Statut marital']||'';
+  const sb = status ? `<span class="sb2 ${SC2[status]||'sc'}">${SL2[status]||status}</span>` : '';
+  const nat = record['Nationalité']||'';
+  const height = record['Taille (cm)'];
+  const weight = record['Poids (kg)'];
+  const ph = [];
+  if(height) ph.push(`📏 ${height}cm`);
+  if(weight) ph.push(`⚖️ ${weight}kg`);
+  const interests = (record["Centres d'intérêt"]||'').split(', ').filter(Boolean);
+  const ch = interests.slice(0,3).map(x=>`<span class="mc">${x}</span>`).join('');
+  const ex = interests.length>3 ? `<span class="mc">+${interests.length-3}</span>` : '';
+  const tiktok = record['TikTok Contact']||'';
+  const religion = record['Religion']||'';
+  const city = record['Ville de résidence']||'';
+  const country = record['Pays de résidence']||'';
+  const job = record['Profession']||'';
+  const age = record['Âge']||'';
+
+  const myCard = `<div style="margin-bottom:1.5rem;">
+    <div style="font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--pink);margin-bottom:10px;display:flex;align-items:center;gap:8px;">
+      👤 Mon profil
+      <span style="height:1px;flex:1;background:var(--pink-light);display:block"></span>
+    </div>
+    <div class="pc" style="border:2px solid var(--pink);background:var(--pink-light);">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+        <div class="av" style="background:white;color:var(--pink);margin-bottom:0">${ini2(name)}</div>
+        <button onclick="editMyProfile()" style="background:var(--pink);color:white;border:none;border-radius:8px;padding:5px 12px;cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif;">✏️ Modifier</button>
+      </div>
+      <div class="pn">${name}, ${age} ans</div>
+      <div class="pm">${gender} · 📍 ${city||'—'}${country?' · '+country:''}</div>
+      <div class="pm">${job||''}</div>
+      <div class="pm">${religion?'🕊️ '+religion:''}</div>
+      <div class="pm">${tiktok?'🎵 @'+tiktok:''}</div>
+      <div class="ptags">${sb}${nat?`<span class="mc">${nat}</span>`:''}${ph.map(x=>`<span class="mc">${x}</span>`).join('')}</div>
+      <div class="pint">${ch}${ex}</div>
+    </div>
+  </div>`;
+
+  // Load other profiles
+  const pg = document.getElementById('pg');
+  const cnt = document.getElementById('cnt');
+  pg.innerHTML = myCard + '<div class="es"><p>⏳ Chargement des autres profils...</p></div>';
+  
+  loadProfiles().then(()=>{
+    const othersHtml = P.length ? P.map((p,i)=>{
+      const c2=gc(i);
+      const ch2=p.interests.slice(0,3).map(x=>`<span class="mc">${x}</span>`).join('');
+      const ex2=p.interests.length>3?`<span class="mc">+${p.interests.length-3}</span>`:'';
+      const sb2=p.status?`<span class="sb2 ${SC2[p.status]||'sc'}">${SL2[p.status]||p.status}</span>`:'';
+      const ph2=[];if(p.height)ph2.push(`📏 ${p.height}cm`);if(p.weight)ph2.push(`⚖️ ${p.weight}kg`);
+      return`<div class="pc">
+        <div class="av" style="background:${c2.bg};color:${c2.t}">${ini(p.name)}</div>
+        <div class="pn">${p.name}, ${p.age} ans</div>
+        <div class="pm">${p.gender} · 📍 ${p.city||'—'}${p.country?' · '+p.country:''}</div>
+        <div class="pm">${p.job||''}</div>
+        <div class="pm">${p.religion?'🕊️ '+p.religion:''}</div>
+        <div class="pm">${p.tiktok?'🎵 @'+p.tiktok:''}</div>
+        <div class="ptags">${sb2}${p.nat?`<span class="mc">${p.nat}</span>`:''}${ph2.map(x=>`<span class="mc">${x}</span>`).join('')}</div>
+        <div class="pint">${ch2}${ex2}</div>
+      </div>`;
+    }).join('') : '<div class="es"><p>Aucun autre profil disponible.</p></div>';
+    
+    cnt.textContent = (P.length+1)+' profil'+(P.length+1>1?'s':'');
+    pg.innerHTML = myCard + `<div style="font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text2);margin-bottom:10px;display:flex;align-items:center;gap:8px;">👥 Autres profils <span style="height:1px;flex:1;background:var(--border);display:block"></span></div><div class="pg">${othersHtml}</div>`;
+  });
+}
 
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),5000);}
 </script>
